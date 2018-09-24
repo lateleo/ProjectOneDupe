@@ -25,6 +25,17 @@ public class Request {
 		this.amount = amount;
 		this.reason = reason;
 	}
+	
+	public Request(int id, int employeeId, int managerId, Timestamp dateCreated, double amount, String reason, int status) {
+		super();
+		this.id = id;
+		this.employeeId = employeeId;
+		this.managerId = managerId;
+		this.dateCreated = dateCreated;
+		this.amount = amount;
+		this.reason = reason;
+		this.status = status;
+	}
 
 
 //--GETTERS AND SETTERS----------------------------------------

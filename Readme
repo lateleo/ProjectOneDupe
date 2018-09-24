@@ -23,3 +23,20 @@ BONUS
 -An Employee can upload an image of his/her receipt as part of the reimbursement request 
 -A Manager has charts to see important information regarding reimbursements
 -A Manager can view images of the receipts from reimbursement requests
+
+Technologies:
+-Java 1.8
+-Servlets
+-JDBC
+-SQL
+-PL/SQL
+-HTML/CSS/Javascript
+-Bootstrap
+-AJAX (required in atleast 2 functionalities)
+-JUnit
+-log4j
+Environment:
+-Tomcat
+-Oracle 11g Database (AWS RDS)
+-Eclipse/Spring Tools Suite
+-SQL Developer
