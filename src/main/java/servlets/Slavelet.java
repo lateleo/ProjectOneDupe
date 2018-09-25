@@ -24,7 +24,8 @@ public class Slavelet extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+		System.out.println("post");
+		ServletHelper.process(request, response);
 		
 	}
 

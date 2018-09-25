@@ -15,8 +15,7 @@ public class JDBCconnection {
 				Class.forName("oracle.jdbc.driver.OracleDriver");
 				
 				Properties props = new Properties();
-				System.out.println(new File(".").getAbsolutePath());
-				FileInputStream in = new FileInputStream("C:\\Users\\Art Burtch\\Documents\\workspace-sts-3.9.5.RELEASE\\ProjectOne\\src\\main\\resources\\properties\\connection.properties");
+				FileInputStream in = new FileInputStream("src/main/resources/properties/connection.properties");
 				props.load(in);
 				String url = props.getProperty("url");
 				String username = props.getProperty("username");

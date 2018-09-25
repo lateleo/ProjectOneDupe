@@ -15,7 +15,7 @@ public class EmployeeDAO implements IEmployee {
 
 	public Employee getEmployee(int id) {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM employees WHERE id = ?";
+		String sql = "SELECT * FROM users WHERE id = ?";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
@@ -36,7 +36,7 @@ public class EmployeeDAO implements IEmployee {
 	
 	public Employee getEmployee(String username) {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM employees WHERE username = ?";
+		String sql = "SELECT * FROM users WHERE username = ?";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, username);
@@ -57,7 +57,7 @@ public class EmployeeDAO implements IEmployee {
 
 	public List<Employee> allEmployees() {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM employees ORDER BY username"; //<--------------IMPORTANT
+		String sql = "SELECT * FROM users WHERE is_manager = 0 ORDER BY username"; //<--------------IMPORTANT
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ArrayList<Employee> employees = new ArrayList<Employee>();
@@ -79,7 +79,7 @@ public class EmployeeDAO implements IEmployee {
 
 	public boolean deleteEmployee(Employee employee) {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "DELETE FROM employees WHERE ID = ?"; //<--------------IMPORTANT
+		String sql = "DELETE FROM users WHERE ID = ?"; //<--------------IMPORTANT
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, employee.getId());
@@ -93,7 +93,7 @@ public class EmployeeDAO implements IEmployee {
 
 	public boolean updateEmployee(Employee employee) {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "UPDATE employees SET first_name = ?, last_name = ?, hashed_password = ? WHERE ID = ?";
+		String sql = "UPDATE users SET first_name = ?, last_name = ?, hashed_password = ? WHERE ID = ?";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, employee.getFirstName());

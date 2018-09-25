@@ -11,20 +11,19 @@ import org.json.simple.JSONObject;
 import dao.EmployeeDAO;
 import models.Employee;
 import service.EmployeeService;
+import service.ManagerService;
 
 public class ServletHelper {
 	
 	public static void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		
+		System.out.println("process");
 		String uri = request.getRequestURI();
-		System.out.println(request.getRequestURI());
-		if(uri.equals("/ProjectOne/stark.do")) {
-			Employee stark = EmployeeService.getEmployee(0);
-			System.out.println(stark.fullName());
-//			JSONObject obj = new JSONObject();
-//			obj.put("FullName", stark.fullName());
-			response.getWriter().append(stark.fullName());
-			System.out.println(response.toString());
+		System.out.println(uri);
+		if(uri.equals("/ProjectOne/username.do")) {
+			System.out.println(request.getParameter("username"));
+//			Employee emp = EmployeeService.getEmployee(request.getParameter("username"));
+//			System.out.println(emp.fullName());
+//			response.getWriter().append(emp.fullName());
 		}
 //		
 //		if(uri.equals("")) {

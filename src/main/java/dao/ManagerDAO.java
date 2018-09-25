@@ -15,7 +15,7 @@ public class ManagerDAO implements IManager {
 
 	public Manager getManager(int id) {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM managers WHERE id = ?";
+		String sql = "SELECT * FROM users WHERE id = ?";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
@@ -36,7 +36,7 @@ public class ManagerDAO implements IManager {
 	
 	public Manager getManager(String username) {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM managers WHERE username = ?";
+		String sql = "SELECT * FROM users WHERE username = ?";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, username);
@@ -57,7 +57,7 @@ public class ManagerDAO implements IManager {
 
 	public List<Manager> allManagers() {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM managers ORDER BY username"; //<--------------IMPORTANT
+		String sql = "SELECT * FROM users WHERE is_manager = 1 ORDER BY username"; //<--------------IMPORTANT
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ArrayList<Manager> managers = new ArrayList<Manager>();
@@ -79,7 +79,7 @@ public class ManagerDAO implements IManager {
 
 	public boolean deleteManager(Manager manager) {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "DELETE FROM managers WHERE ID = ?"; //<--------------IMPORTANT
+		String sql = "DELETE FROM users WHERE ID = ?"; //<--------------IMPORTANT
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, manager.getId());
@@ -93,7 +93,7 @@ public class ManagerDAO implements IManager {
 
 	public boolean updateManager(Manager manager) {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "UPDATE managers SET first_name = ?, last_name = ?, hashed_password = ? WHERE ID = ?";
+		String sql = "UPDATE users SET first_name = ?, last_name = ?, hashed_password = ? WHERE ID = ?";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, manager.getFirstName());

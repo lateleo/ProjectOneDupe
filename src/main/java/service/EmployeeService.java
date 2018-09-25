@@ -15,6 +15,7 @@ public class EmployeeService {
 	public static Employee getEmployee(String username) {
 		return new EmployeeDAO().getEmployee(username);
 	}
+	
 	public static List<Employee> allEmployees(){
 		return new EmployeeDAO().allEmployees();
 	}

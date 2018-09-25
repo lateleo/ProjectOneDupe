@@ -1,4 +1,4 @@
-package util;
+package models;
 
 public class User {
 	private int id;
@@ -6,15 +6,17 @@ public class User {
 	private String lastName;
 	private String username;
 	private int hashedPassword;
+	private boolean isManager;
 	
 //----CONSTRUCTORS------------------------------------------------
-	public User(int id, String firstName, String lastName, String username, int hashedPassword) {
+	public User(int id, String firstName, String lastName, String username, int hashedPassword, boolean isManager) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.username = username;
 		this.hashedPassword = hashedPassword;
+		this.isManager = isManager;
 	}
 	
 	public User() {
@@ -67,6 +69,15 @@ public class User {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	//MANAGER
+	public boolean getIsManager() {
+		return isManager;
+	}
+	
+	public void setIsManager(boolean isManager) {
+		this.isManager = isManager;
 	}
 
 }
