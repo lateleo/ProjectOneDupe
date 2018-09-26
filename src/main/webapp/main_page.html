@@ -1,0 +1,18 @@
+<div>
+	<h1>Main Menu:</h1>
+</div>
+
+<button id="test" onclick="doStuff()">Test</button>
+<div>
+	<ul id="output"></ul>
+</div>
+
+<script>
+
+	function doStuff(){
+		let x = document.getElementById("output");
+		let y = "<li>List item</li>";
+		x.innerHTML = x.innerHTML + y;
+	}
+
+</script>
