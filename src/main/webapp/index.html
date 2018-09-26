@@ -6,6 +6,10 @@
 		<div><label for="password">Password:</label><input name="password" id="password" type="password"></div>
 		<br>
 		<div><button onclick="login()">Login</button></div>
+		<div>
+			<p>Test: </p>
+			<p id="test"></p>
+		</div>
 </div>
 
 <script>
@@ -13,8 +17,7 @@
 		let xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				document.getElementById("body").innerHTML = this.responseText
-				document.getElementById("test").addEventListener("click",doStuff())
+				document.getElementById("test").innerHTML = this.getResponseHeader("user")
 			}
 		};
 		let username = document.getElementById("username").value;
@@ -25,11 +28,6 @@
 		xhttp.send("username="+username+"&password="+password);
 	}
 
-	function doStuff(){
-		let x = document.getElementById("output");
-		let y = "<li>List item</li>";
-		x.innerHTML = x.innerHTML + y;
-	}
 </script>
 
 </body>
