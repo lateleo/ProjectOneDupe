@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import models.Employee;
 import models.User;
 import util.JDBCconnection;
 
@@ -52,6 +51,23 @@ public class UserDAO implements IUser {
 		} catch(SQLException e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+	
+	public boolean updateUser(User user) {
+		Connection conn = JDBCconnection.getConnection();
+		String sql = "UPDATE users SET first_name = ?, last_name = ?, hashed_password = ? WHERE ID = ?";
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, user.getFirstName());
+			ps.setString(2, user.getLastName());
+			ps.setInt(3, user.getHashedPassword());
+			ps.setInt(4, user.getId());
+			ps.executeQuery();
+			return true;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 

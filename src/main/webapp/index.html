@@ -1,34 +1,232 @@
 <html>
 <body>
-<div id="body">
-		<h1>Please Login:</h1>
-		<div><label for="username">Username:</label><input name="username" id="username" type="text"></div>
-		<div><label for="password">Password:</label><input name="password" id="password" type="password"></div>
-		<br>
-		<div><button onclick="login()">Login</button></div>
-		<div>
-			<p>Test 4: </p>
-			<p id="test"></p>
-		</div>
+
+<!-- MISC -->
+<script>
+	var user;
+	var request;
+	var empRequests;
+	var pendingRequests;
+	var resolvedRequests;
+	var employees;
+
+	function show(id){
+		document.getElementById(id).removeAttribute("style");
+	};
+
+	function hide(id){
+		document.getElementById(id).setAttribute("style","display:none");
+	};
+
+	function showAll(className){
+		let elems = document.getElementsByClassName(className);
+		for (i = 0; i < elems.length; i++){
+			elems[i].removeAttribute("style");
+		};
+	};
+
+	function hideAll(className){
+		let elems = document.getElementsByClassName(className);
+		for (i = 0; i < elems.length; i++){
+			elems[i].setAttribute("style","display:none");
+		};
+	};
+
+	function fullName(){
+		let name = user.firstName+" "+user.lastName;
+		return name;
+	};
+
+	function updateFullNames(){
+		let fullnames = document.getElementsByClassName("full-name");
+		for (i = 0; i < fullnames.length; i++){
+			fullnames[i].innerHTML = fullName();
+		};
+	};
+
+</script>
+
+<!-- LOGIN -->
+<div id="login-page">
+
+	<div><h1>Please Login:</h1></div>
+	<div><label for="username">Username:</label><input name="username" id="username" type="text"></div>
+	<div><label for="password">Password:</label><input name="password" id="password" type="password"></div>
+	<br>
+	<div><button onclick="login()">Login</button></div>
+	<p id="login-loading" style="display:none">Loading...</p>
+	<p id="invalid-login" style="display:none">Invalid Login. Please try again.</p>
+	<p id="logout-message" style="display:none">Logout Successful.</p>
+
 </div>
 
 <script>
 	function login(){
+		show("login-loading");
+		hide("invalid-login");
 		let xhttp = new XMLHttpRequest();
+		let username = document.getElementById("username");
+		let password = document.getElementById("password");
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				document.getElementById("test").innerHTML = this.getResponseHeader("user")
-			}
+				if (this.getResponseHeader("valid-login") == 1){
+					username.value = null;
+					password.value = null;
+					hide("login-page");
+					user = JSON.parse(this.getResponseHeader("user"));
+					updateFullNames()
+					show("emp-main");
+				} else {
+					show("invalid-login");
+				};
+				hide("login-loading");
+			};
 		};
-		let username = document.getElementById("username").value;
-		let password = document.getElementById("password").value;
-
 		xhttp.open("post", "/ProjectOne/login.do", true);
-		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-		xhttp.send("username="+username+"&password="+password);
-	}
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("username="+username.value+"&password="+password.value);
+	};
+</script>
+
+<!-- MAIN PAGE -->
+
+<div id="emp-main" style="display:none" class="logged-in">
+
+	<div>
+		<h1>Welcome, <span class="full-name"></span></h1>
+	</div>
+	<div id="user-options">
+		<h3>Options:</h3>
+		<button onclick="logout()">Logout</button>
+		<button onclick="changeName()">Change Name</button>
+		<button onclick="changePassword()">Change Password</button>
+	</div>
+	<p id="name-change-success" style="display:none">Name successfully updated.</p>
+	<p id="password-change-success" style="display:none">Name successfully updated.</p>
+	<p id="emp-main-loading" style="display:none">Loading...</p>
+
+</div>
+
+<script>
+
+	function logout(){
+		show("emp-main-loading");
+		user = null;
+		hideAll("logged-in");
+		show("logout-message");
+		show("login-page");
+		hide("emp-main-loading");
+	};
+
+	function changeName(){
+		document.getElementById("firstName").value = user.firstName;
+		document.getElementById("lastName").value = user.lastName;
+		hide("emp-main");
+		show("change-name");
+	};
+
+		function changePassword(){
+		hide("emp-main");
+		show("change-password");
+	};
 
 </script>
+
+<!-- CHANGE NAME -->
+
+<div id="change-name" style="display:none" class="logged-in">
+
+	<div>
+		<h1>Name Change</h1>
+		<h4>Please enter your new name:</h4>
+	</div>
+	<div><label for="firstName">First Name:</label><input name="firstName" id="firstName" type="text"></div>
+	<div><label for="lastName">Last Name:</label><input name="lastName" id="lastName" type="text"></div>
+	<div><button id="saveNewName" onclick="updateName()">Save</button></div>
+	<p id="change-name-loading" style="display:none">Loading...</p>
+
+</div>
+
+<script>
+
+	function updateName(){
+		show("change-name-loading");
+		let xhttp = new XMLHttpRequest();
+		let firstName = document.getElementById("firstName").value;
+		let lastName = document.getElementById("lastName").value;
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				user = JSON.parse(this.getResponseHeader("user"));
+				hide("change-name");
+				hide("change-name-loading");
+				show("name-change-success");
+				updateFullNames();
+				show("emp-main");
+			};
+		};
+		xhttp.open("post", "/ProjectOne/updateName.do", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("id="+user.id+"&firstName="+firstName+"&lastName="+lastName);
+		console.log(user.id);
+		console.log(firstName);
+		console.log(lastName);
+	};
+
+</script>
+
+<!-- CHANGE PASSWORD -->
+
+<div id="change-password" style="display:none" class="logged-in">
+
+	<div>
+		<h1>Update Password:</h1>
+	</div>
+	<div><label for="oldPass">Current Password:</label>
+		<input name="oldPass" id="oldPass" type="password"></div>
+	<div><label for="newPass">New Password:</label>
+		<input name="newPass" id="newPass" type="password"></div>
+	<div><label for="confPass">Confirm New Password:</label>
+		<input name="confPass" id="confPass" type="password"></div>
+
+	<div><button id="saveNewPassword" onclick="updatePassword()">Update Password</button></div>
+	<p id="change-password-loading" style="display:none">Loading...</p>
+	<p id="invalid-password" style="display:none">Invalid Password(s). Please try again.</p>
+
+
+</div>
+
+<script>
+
+	function updatePassword(){
+		show("change-password-loading");
+		let xhttp = new XMLHttpRequest();
+		let oldPass = document.getElementById("oldPass");
+		let newPass = document.getElementById("newPass");
+		let confPass = document.getElementById("confPass");
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {			
+				if (this.getResponseHeader("valid-passwords") == 1){
+					hide("change-password");
+					user = JSON.parse(this.getResponseHeader("user"));
+					show("password-change-success");
+					show("emp-main");
+				} else {
+					show("invalid-password");
+				};
+				oldPass.value = null;
+				newPass.value = null;
+				confPass.value = null;
+				hide("change-password-loading");
+			};
+		};
+		xhttp.open("post", "/ProjectOne/updatePassword.do", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("id="+user.id+"&oldPass="+oldPass.value+"&newPass="+newPass.value+"&confPass="+confPass.value);
+	};
+
+</script>
+
+
 
 </body>
 </html>

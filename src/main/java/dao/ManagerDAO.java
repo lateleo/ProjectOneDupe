@@ -98,8 +98,8 @@ public class ManagerDAO implements IManager {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, manager.getFirstName());
 			ps.setString(2, manager.getLastName());
-			ps.setInt(3, manager.getId());
-			ps.setInt(4, manager.getHashedPassword());
+			ps.setInt(3, manager.getHashedPassword());
+			ps.setInt(4, manager.getId());
 			ps.executeQuery();
 			return true;
 		} catch(SQLException e) {

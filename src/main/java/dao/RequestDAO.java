@@ -43,10 +43,8 @@ public class RequestDAO implements IRequest {
 
 
 	public List<Request> allRequests(Employee employee) {
-		// TODO Restrict this to pull only requests for a given employee ("SELECT * FROM request WHERE employee_id = ?")
-		// TODO TEST THIS
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM requests request WHERE employee_id = ? ORDER BY name"; //<--------------IMPORTANT
+		String sql = "SELECT * FROM requests request WHERE employee_id = ? ORDER BY date_created";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, employee.getId());
@@ -69,15 +67,57 @@ public class RequestDAO implements IRequest {
 		}
 	}
 	
-	public List<Request> allRequests() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Request> pendingRequests() {
+		Connection conn = JDBCconnection.getConnection();
+		String sql = "SELECT * FROM requests request WHERE status = 0 ORDER BY date_created";
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ArrayList<Request> requests = new ArrayList<Request>();
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Request request = new Request(rs.getInt("id"),
+						rs.getInt("employee_id"),
+						rs.getInt("manager_id"),
+						rs.getTimestamp("date_created"),
+						rs.getDouble("amount"),
+						rs.getString("reason"),
+						rs.getInt("status"));
+				requests.add(request);
+			}
+			return requests;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<Request> resolvedRequests() {
+		Connection conn = JDBCconnection.getConnection();
+		String sql = "SELECT * FROM requests request WHERE status = 1 or 2 ORDER BY date_created";
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ArrayList<Request> requests = new ArrayList<Request>();
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Request request = new Request(rs.getInt("id"),
+						rs.getInt("employee_id"),
+						rs.getInt("manager_id"),
+						rs.getTimestamp("date_created"),
+						rs.getDouble("amount"),
+						rs.getString("reason"),
+						rs.getInt("status"));
+				requests.add(request);
+			}
+			return requests;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public boolean deleteRequest(Request request) {
-		// TODO Auto-generated method stub
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "DELETE FROM requests WHERE ID = ?"; //<--------------IMPORTANT
+		String sql = "DELETE FROM requests WHERE ID = ?";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, request.getId());
@@ -110,7 +150,7 @@ public class RequestDAO implements IRequest {
 		// TODO TEST THIS
 		try {
 			Connection conn = JDBCconnection.getConnection();
-			String sql = "call add_request(?,?,?)"; // <----------- Must be "call" not "exec" because of JDBC
+			String sql = "call add_request(?,?,?)";
 			CallableStatement cs = conn.prepareCall(sql);
 			cs.setInt(1, request.getEmployeeId());
 			cs.setDouble(2, request.getAmount());

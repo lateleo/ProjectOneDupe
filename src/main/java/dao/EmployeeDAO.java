@@ -98,8 +98,9 @@ public class EmployeeDAO implements IEmployee {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, employee.getFirstName());
 			ps.setString(2, employee.getLastName());
-			ps.setInt(3, employee.getId());
-			ps.setInt(4, employee.getHashedPassword());
+			ps.setInt(3, employee.getHashedPassword());
+			ps.setInt(4, employee.getId());
+
 			ps.executeQuery();
 			return true;
 		} catch(SQLException e) {

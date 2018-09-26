@@ -79,5 +79,11 @@ public class User {
 	public void setIsManager(boolean isManager) {
 		this.isManager = isManager;
 	}
+	
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
+				+ ", hashedPassword=" + hashedPassword + ", isManager=" + isManager + "]";
+	}
 
 }

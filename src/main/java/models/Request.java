@@ -7,7 +7,9 @@ import java.util.List;
 public class Request {
 	private int id;
 	private int employeeId;
+	private Employee employee;
 	private int managerId;
+	private Manager manager;
 	private Timestamp dateCreated;
 	private double amount;
 	private String reason;

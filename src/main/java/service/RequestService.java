@@ -14,6 +14,14 @@ public class RequestService {
 		return new RequestDAO().allRequests(employee);
 	}
 	
+	public static List<Request> pendingRequests(){
+		return new RequestDAO().pendingRequests();
+	}
+	
+	public static List<Request> resolvedRequests(){
+		return new RequestDAO().resolvedRequests();
+	}	
+	
 	public static boolean updateRequest(Request request) {
 		return new RequestDAO().updateRequest(request);
 	}
