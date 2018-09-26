@@ -6,30 +6,31 @@
 		<div><label for="password">Password:</label><input name="password" id="password" type="password"></div>
 		<br>
 		<div><button onclick="login()">Login</button></div>
-
-	<script>
-
-
-
-		function login(){
-			let xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-					document.getElementById("body").innerHTML = this.responseText
-				}
-			};
-			let username = document.getElementById("username").value;
-			let password = document.getElementById("password").value;
-
-			xhttp.open("post", "/ProjectOne/login.do", true);
-			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-			xhttp.send("username="+username+"&password="+password);
-		}
-
-
-
-	</script>
 </div>
+
+<script>
+	function login(){
+		let xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				document.getElementById("body").innerHTML = this.responseText
+				document.getElementById("test").addEventListener("click",doStuff())
+			}
+		};
+		let username = document.getElementById("username").value;
+		let password = document.getElementById("password").value;
+
+		xhttp.open("post", "/ProjectOne/login.do", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+		xhttp.send("username="+username+"&password="+password);
+	}
+
+	function doStuff(){
+		let x = document.getElementById("output");
+		let y = "<li>List item</li>";
+		x.innerHTML = x.innerHTML + y;
+	}
+</script>
 
 </body>
 </html>
