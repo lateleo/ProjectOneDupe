@@ -1,8 +1,8 @@
 package models;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.Arrays;
-import java.util.List;
 
 public class Request {
 	private int id;
@@ -18,6 +18,13 @@ public class Request {
 //--CONSTRUCTORS-----------------------------------------------
 	public Request() {
 		super();
+	}
+	
+	public Request(int employeeId, double amount, String reason) {
+		super();
+		this.employeeId = employeeId;
+		this.amount = amount;
+		this.reason = reason;
 	}
 	
 	public Request(int id, int employeeId, double amount, String reason) {
@@ -38,6 +45,44 @@ public class Request {
 		this.reason = reason;
 		this.status = status;
 	}
+	
+	public Request(int id, Employee employee, int managerId, Timestamp dateCreated, double amount, String reason, int status) {
+		super();
+		this.id = id;
+		this.employee = employee;
+		this.employeeId = employee.getId();
+		this.managerId = managerId;
+		this.dateCreated = dateCreated;
+		this.amount = amount;
+		this.reason = reason;
+		this.status = status;
+	}
+	
+	public Request(int id, Employee employee, Manager manager, Timestamp dateCreated, double amount, String reason, int status) {
+		super();
+		this.id = id;
+		this.employee = employee;
+		this.employeeId = employee.getId();
+		this.manager = manager;
+		this.managerId = manager.getId();
+		this.dateCreated = dateCreated;
+		this.amount = amount;
+		this.reason = reason;
+		this.status = status;
+	}
+	
+	public Request(int id, int employeeId, Manager manager, Timestamp dateCreated, double amount, String reason, int status) {
+		super();
+		this.id = id;
+		this.employeeId = employeeId;
+		this.manager = manager;
+		this.managerId = manager.getId();
+		this.dateCreated = dateCreated;
+		this.amount = amount;
+		this.reason = reason;
+		this.status = status;
+	}
+	
 
 
 //--GETTERS AND SETTERS----------------------------------------
@@ -68,12 +113,24 @@ public class Request {
 	}
 	
 	//DATE CREATED
-	public Timestamp getDateCreated() {
-		return dateCreated;
+	public String getDate() {
+		return DateFormat.getDateInstance(DateFormat.SHORT).format(dateCreated);
 	}
+	
+	public String getTime() {
+		return DateFormat.getTimeInstance().format(dateCreated);
+
+	}
+	
+	public String getDateCreated() {
+		return getDate()+", "+getTime();
+	}
+	
 	public void setDateCreated(Timestamp dateCreated) {
 		this.dateCreated = dateCreated;
 	}
+	
+
 	
 	//AMOUNT
 	public double getAmount() {

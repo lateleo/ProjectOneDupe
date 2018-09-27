@@ -3,7 +3,6 @@ package dao;
 import java.util.List;
 
 import models.Request;
-import models.Employee;
 
 public interface IRequest {
 	public Request getRequest(int id);

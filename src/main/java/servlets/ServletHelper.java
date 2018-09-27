@@ -28,6 +28,16 @@ public class ServletHelper {
 			updatePassword(request, response);	
 		} else if (uri.equals("/ProjectOne/employeeViewPending.do")) {
 			employeeViewPending(request, response);
+		} else if (uri.equals("/ProjectOne/employeeViewResolved.do")) {
+			employeeViewResolved(request, response);
+		} else if (uri.equals("/ProjectOne/managerViewPending.do")) {
+			managerViewPending(request, response);
+		} else if (uri.equals("/ProjectOne/managerViewResolved.do")) {
+			managerViewResolved(request, response);
+		} else if (uri.equals("/ProjectOne/approveDenyRequest.do")) {
+			updateRequest(request, response);
+		} else if (uri.equals("/ProjectOne/createRequest.do")) {
+			createRequest(request, response);
 		}
 	}
 	
@@ -67,8 +77,33 @@ public class ServletHelper {
 	}
 	
 	public static void employeeViewPending(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-		List<Request> pendings = RequestService.pendingRequests(Integer.valueOf(request.getParameter("userId")));
-		response.setHeader("pendings", JSONConverter.convert(pendings));
+		List<Request> pending = RequestService.pendingRequests(Integer.valueOf(request.getParameter("userId")));
+		response.setHeader("pending", JSONConverter.convert(pending));
+	}
+	
+	public static void employeeViewResolved(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		List<Request> resolved = RequestService.resolvedRequests(Integer.valueOf(request.getParameter("userId")));
+		response.setHeader("resolved", JSONConverter.convert(resolved));
+	}
+	
+	public static void managerViewPending(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		List<Request> pending = RequestService.pendingRequests();
+		response.setHeader("pending", JSONConverter.convert(pending));
+	}
+	
+	public static void managerViewResolved(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		List<Request> resolved = RequestService.resolvedRequests();
+		response.setHeader("resolved", JSONConverter.convert(resolved));
+	}
+	
+	public static void updateRequest(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		Request req = RequestService.getRequest(request.getIntHeader("id"));
+		req.setStatus(request.getIntHeader("status"));
+		RequestService.updateRequest(req);
+	}
+	
+	public static void createRequest(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		
 	}
 
 }

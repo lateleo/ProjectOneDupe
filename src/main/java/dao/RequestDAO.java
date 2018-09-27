@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.Employee;
+import models.Manager;
 import models.Request;
+import service.EmployeeService;
+import service.ManagerService;
 import util.JDBCconnection;
 
 public class RequestDAO implements IRequest {
@@ -44,7 +47,7 @@ public class RequestDAO implements IRequest {
 
 	public List<Request> pendingRequests(int employee_id) {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM requests request WHERE employee_id = ? and status = 0 ORDER BY date_created";
+		String sql = "SELECT * FROM requests WHERE employee_id = ? and status = 0 ORDER BY date_created";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, employee_id);
@@ -69,21 +72,24 @@ public class RequestDAO implements IRequest {
 	
 	public List<Request> resolvedRequests(int employee_id) {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM requests request WHERE employee_id = ? and status = 1 or 2 ORDER BY date_created";
+		String sql = "SELECT * FROM requests WHERE employee_id = ? and status = 1 or 2 ORDER BY date_created";
+		List<Manager> managers = ManagerService.allManagers();
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, employee_id);
 			ArrayList<Request> requests = new ArrayList<Request>();
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				Request request = new Request(rs.getInt("id"),
+				for (Manager manager : managers) if (manager.getId() == rs.getInt("manager_id")) {
+					Request request = new Request(rs.getInt("id"),
 						rs.getInt("employee_id"),
-						rs.getInt("manager_id"),
+						manager,
 						rs.getTimestamp("date_created"),
 						rs.getDouble("amount"),
 						rs.getString("reason"),
 						rs.getInt("status"));
-				requests.add(request);
+					requests.add(request);
+				}
 			}
 			return requests;
 		} catch(SQLException e) {
@@ -94,20 +100,23 @@ public class RequestDAO implements IRequest {
 	
 	public List<Request> pendingRequests() {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM requests request WHERE status = 0 ORDER BY date_created";
+		String sql = "SELECT * FROM requests WHERE status = 0 ORDER BY date_created";
+		List<Employee> employees = EmployeeService.allEmployees();
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ArrayList<Request> requests = new ArrayList<Request>();
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				Request request = new Request(rs.getInt("id"),
-						rs.getInt("employee_id"),
+				for (Employee employee : employees) if (employee.getId() == rs.getInt("employee_id")) {
+					Request request = new Request(rs.getInt("id"),
+						employee,
 						rs.getInt("manager_id"),
 						rs.getTimestamp("date_created"),
 						rs.getDouble("amount"),
 						rs.getString("reason"),
 						rs.getInt("status"));
-				requests.add(request);
+					requests.add(request);
+				}
 			}
 			return requests;
 		} catch(SQLException e) {
@@ -118,20 +127,26 @@ public class RequestDAO implements IRequest {
 	
 	public List<Request> resolvedRequests() {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM requests request WHERE status = 1 or 2 ORDER BY date_created";
+		String sql = "SELECT * FROM requests WHERE status = 1 or 2 ORDER BY date_created";
+		List<Manager> managers = ManagerService.allManagers();
+		List<Employee> employees = EmployeeService.allEmployees();
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ArrayList<Request> requests = new ArrayList<Request>();
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				Request request = new Request(rs.getInt("id"),
-						rs.getInt("employee_id"),
-						rs.getInt("manager_id"),
-						rs.getTimestamp("date_created"),
-						rs.getDouble("amount"),
-						rs.getString("reason"),
-						rs.getInt("status"));
-				requests.add(request);
+				for (Employee employee : employees) if (employee.getId() == rs.getInt("employee_id")) {
+					for (Manager manager : managers) if (manager.getId() == rs.getInt("manager_id")) {
+						Request request = new Request(rs.getInt("id"),
+							employee,
+							manager,
+							rs.getTimestamp("date_created"),
+							rs.getDouble("amount"),
+							rs.getString("reason"),
+							rs.getInt("status"));
+						requests.add(request);
+					}
+				}
 			}
 			return requests;
 		} catch(SQLException e) {

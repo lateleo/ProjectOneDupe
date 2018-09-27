@@ -43,6 +43,14 @@
 		};
 	};
 
+	function formatAmount(amount) {
+		return "$" + amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+	};
+
+	function wipeTable(bodyId){
+		document.getElementById(bodyId).innerHTML = "";
+	};
+
 </script>
 
 <!-- LOGIN -->
@@ -105,14 +113,15 @@
 		<button class="btn btn-default" onclick="changeName()">Change Name</button>
 		<button class="btn btn-default" onclick="changePassword()">Change Password</button>
 	</div><br>
-	<p id="name-change-success" style="display:none">Name successfully updated.</p>
-	<p id="password-change-success" style="display:none">Name successfully updated.</p>
+	<p id="name-change-success" style="display:none" class="success">Name successfully updated.</p>
+	<p id="new-request-success" style="display:none" class="success">Request successfully submitted.</p>
+	<p id="password-change-success" style="display:none" class="success">Name successfully updated.</p>
 	<p id="main-loading" style="display:none">Loading...</p><br>
 	<div id="user-options-2">
-		<button class="btn btn-default logged-in" id="new-request" style="display:none">Create New Request</button>
+		<button class="btn btn-default logged-in" onclick="newRequest()" id="new-request" style="display:none">Create New Request</button>
 		<button class="btn btn-default logged-in" id="all-employees" style="display:none">View All Employees</button>
 		<button class="btn btn-default" onclick="viewPendingRequests()">View Pending Requests</button>
-		<button class="btn btn-default">View Resolved Requests</button>
+		<button class="btn btn-default" onclick="viewResolvedRequests()">View Resolved Requests</button>
 	</div>
 
 </div>
@@ -132,11 +141,13 @@
 		document.getElementById("firstName").value = user.firstName;
 		document.getElementById("lastName").value = user.lastName;
 		hide("main");
+		hideAll("success");
 		show("change-name");
 	};
 
 	function changePassword(){
 		hide("main");
+		hideAll("success");
 		show("change-password");
 	};
 
@@ -149,25 +160,20 @@
 		};
 	};
 
-	function managerViewAllPending(){
-
-	};
-
-	function employeeViewPending(){
-		let xhttp = new XMLHttpRequest();
-
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				pendingRequests = this.getResponseHeader("pendings");
-				hide("main");
-				show("emp-view-pendings");
-			};
+	function viewResolvedRequests(){
+		show("main-loading");
+		if (user.isManager == 1){
+			managerViewAllResolved();
+		} else {
+			employeeViewResolved();
 		};
-		xhttp.open("post", "/ProjectOne/employeeViewPending.do", true);
-		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("userId="+user.id);
-
 	};
+
+	function newRequest(){
+		hide("main");
+		hideAll("success");
+		show("new-request");
+	}
 
 </script>
 
@@ -265,29 +271,338 @@
 
 </script>
 
-<!-- EMPLOYEE VIEW PENDINGS -->
+<!-- EMPLOYEE VIEW PENDING -->
 
-<div id="emp-view-pendings" style="display:none" class="logged-in">
-	<h1>Pending Requests for <span class="fullnames"></span></h1>
+<div id="emp-view-pending" style="display:none" class="logged-in">
+	<h1>Pending Requests for <span class="full-name"></span></h1>
+	<div>
+		<button class="btn btn-default" onclick="backFromEVP()">Back</button>
+		<p id="evp-loading" style="display:none">Loading...</p>
+	</div>
 	<table class="table table-hover">
 		<thead>
-			<th>Created On</th>
-			<th>Amount</th>
-			<th>Reason</th>
-		</thead>
-		<tbody id="emp-pending-table-body">
 			<tr>
-				<td>01/01/2000</td>
-				<td>$200.00</td>
-				<td>Because I wanted to.</td>
+				<th>Created On</th>
+				<th>Amount</th>
+				<th>Reason</th>
 			</tr>
-		</tbody>
+		</thead>
+		<tbody id="emp-pending-table-body"></tbody>
 	</table>
 
 </div>
 
 <script>
+
+	function fillEmployeePending(){
+		let table = document.getElementById("emp-pending-table-body");
+		for (i = 0; i < pendingRequests.length; i++){
+			table.innerHTML += "<tr><td>"+pendingRequests[i].dateCreated+
+			"</td><td>"+formatAmount(pendingRequests[i].amount)+
+			"</td><td>"+pendingRequests[i].reason+"</td></tr>";
+		};
+	}
+
+	function employeeViewPending(){
+		let xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				pendingRequests = JSON.parse(this.getResponseHeader("pending"));
+				fillEmployeePending();
+				hide("main");
+				hide("main-loading");
+				show("emp-view-pending");
+			};
+		};
+		xhttp.open("post", "/ProjectOne/employeeViewPending.do", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("userId="+user.id);
+	};
+
+	function backFromEVP(){
+		show("evp-loading");
+		hide("emp-view-pending");
+		wipeTable("emp-pending-table-body");
+		pendingRequests = null;
+		show("main");
+		hide("evp-loading");
+	}
+
 </script>
+
+<!-- EMPLOYEE VIEW RESOLVED -->
+
+<div id="emp-view-resolved" style="display:none" class="logged-in">
+	<h1>Resolved Requests for <span class="full-name"></span></h1>
+	<div>
+		<button class="btn btn-default" onclick="backFromEVR()">Back</button>
+		<p id="evr-loading" style="display:none">Loading...</p>
+	</div>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Created On</th>
+				<th>Amount</th>
+				<th>Reason</th>
+				<th>Status</th>
+				<th>Resolved By</th>
+			</tr>
+		</thead>
+		<tbody id="emp-resolved-table-body"></tbody>
+	</table>
+
+</div>
+<script>
+
+	function fillEmployeeResolved(){
+		let table = document.getElementById("emp-resolved-table-body");
+		for (i = 0; i < resolvedRequests.length; i++){
+			table.innerHTML += "<tr><td>"+resolvedRequests[i].dateCreated+
+			"</td><td>"+formatAmount(resolvedRequests[i].amount)+
+			"</td><td>"+resolvedRequests[i].reason+
+			"</td><td>"+resolvedRequests[i].statusStr+
+			"</td><td>"+resolvedRequests[i].manager.fullName+"</td></tr>";
+		};
+	}
+
+	function employeeViewResolved(){
+		let xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				resolvedRequests = JSON.parse(this.getResponseHeader("resolved"));
+				fillEmployeeResolved();
+				hide("main");
+				hide("main-loading");
+				show("emp-view-pending");
+			};
+		};
+		xhttp.open("post", "/ProjectOne/employeeViewResolved.do", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("userId="+user.id);
+	};
+
+	function backFromEVR(){
+		show("evr-loading");
+		hide("emp-view-resolved");
+		wipeTable("emp-resolved-table-body");
+		resolvedRequests = null;
+		show("main");
+		hide("evr-loading");
+	}
+
+</script>
+
+<!-- MANAGER VIEW PENDING -->
+
+<div id="mgr-view-pending" style="display:none" class="logged-in">
+	<h1>Pending Requests</h1>
+	<div>
+		<button class="btn btn-default" onclick="backFromMVP()">Back</button>
+		<p id="mvp-loading" style="display:none">Loading...</p>
+	</div>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Created On</th>
+				<th>Created By</th>
+				<th>Amount</th>
+				<th>Reason</th>
+				<th>Approve/Deny</th>
+			</tr>
+		</thead>
+		<tbody id="mgr-pending-table-body"></tbody>
+	</table>
+</div>
+
+<script>
+
+	function fillManagerPending(){
+		let table = document.getElementById("mgr-pending-table-body");
+		for (i = 0; i < pendingRequests.length; i++){
+			let dropdown = "<select id='pending-select-"+pendingRequests[i].id+"'>"+
+			"<option disabled selected></option><option value=1>Approve</option><option value=2>Deny</option>"+
+			"</select>";
+			let button = "<button class='btn btn-default btn-xs' onclick='approveDenyRequest("+
+			pendingRequests[i].id+")'>Submit</button>";
+			table.innerHTML += "<tr id=pend-row-"+pendingRequests[i].id+"><td>"+
+			pendingRequests[i].dateCreated+"</td><td>"+
+			pendingRequests[i].employee.fullName+"</td><td>"+
+			formatAmount(pendingRequests[i].amount)+"</td><td>"+
+			pendingRequests[i].reason+"</td><td id='dropdown-"+pendingRequests[i].id+"'>"+
+			dropdown+button+"</td></tr>";
+		};
+	}
+
+	function managerViewAllPending(){
+		let xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				pendingRequests = JSON.parse(this.getResponseHeader("pending"));
+				fillManagerPending();
+				hide("main");
+				hide("main-loading");
+				show("mgr-view-pending");
+			};
+		};
+		xhttp.open("post", "/ProjectOne/managerViewPending.do", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send();
+	};
+
+	function backFromMVP(){
+		show("mvp-loading");
+		hide("mgr-view-pending");
+		wipeTable("mgr-pending-table-body");
+		pendingRequests = null;
+		show("main");
+		hide("mvp-loading");
+	}
+
+	function removeFromPending(id){
+		for (i = 0; i > pendingRequests.length; i++){
+			if (pendingRequests[i].id == id) pendingRequests.splice(i,1);
+		};
+		document.getElementById("pend-row-"+id).remove();
+	};
+
+	function approveDenyRequest(id){
+		let status = document.getElementById("pending-select-"+id).value;
+		if (status != null){
+			let xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					removeFromPending(id);
+				};
+			};
+			xhttp.open("post", "/ProjectOne/approveDenyRequest.do", true);
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send("id="+id+"&status="+status);	
+		};
+	};
+
+</script>
+
+<!-- MANAGER VIEW RESOLVED -->
+
+<div id="mgr-view-resolved" style="display:none" class="logged-in">
+	<h1>Resolved Requests</h1>
+	<div>
+		<button class="btn btn-default" onclick="backFromMVR()">Back</button>
+		<p id="mvr-loading" style="display:none">Loading...</p>
+	</div>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Created On</th>
+				<th>Created By</th>
+				<th>Amount</th>
+				<th>Reason</th>
+				<th>Status</th>
+				<th>Resolved By</th>
+			</tr>
+		</thead>
+		<tbody id="mgr-resolved-table-body"></tbody>
+	</table>
+
+</div>
+
+<script>
+
+	function fillManagerResolved(){
+		let table = document.getElementById("mgr-resolved-table-body");
+		for (i = 0; i < resolvedRequests.length; i++){
+			table.innerHTML += "<tr><td>"+resolvedRequests[i].dateCreated+
+			"</td><td>"+resolvedRequests[i].employee.fullName+
+			"</td><td>"+formatAmount(resolvedRequests[i].amount)+
+			"</td><td>"+resolvedRequests[i].reason+
+			"</td><td>"+resolvedRequests[i].statusStr+
+			"</td><td>"+resolvedRequests[i].manager.fullName+"</td></tr>";
+		};
+	}
+
+	function managerViewAllResolved(){
+		let xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				resolvedRequests = JSON.parse(this.getResponseHeader("resolved"));
+				fillManagerResolved();
+				hide("main");
+				hide("main-loading");
+				show("mgr-view-pending");
+			};
+		};
+		xhttp.open("post", "/ProjectOne/managerViewResolved.do", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send();
+	};
+
+	function backFromMVR(){
+		show("mvr-loading");
+		hide("mgr-view-resolved");
+		wipeTable("mgr-resolved-table-body");
+		resolvedRequests = null;
+		show("main");
+		hide("mgr-loading");
+	}
+
+</script>
+
+<!-- NEW REQUEST -->
+
+<div id="new-request" style="display:none" class="logged-in">
+	<h1>New Reimbursement Request:</h1>
+	<p id="newReq-loading" style="display:none">Loading...</p>
+	<div>
+		<label for="amount">Amount:</label><input name="amount" id="amount" type="text" class="newReq">
+	</div>
+	<div>
+		<label for="reason">Reason:</label><textarea name="reason" id="reason" class="newReq"></textarea>
+	</div>
+	<div>
+		<button onclick="createRequest()">Create</button>
+	</div>
+
+
+</div>
+
+<script>
+
+	function wipeNewReqFields(){
+		let fields = document.getElementsByClassName("newReq");
+		for (i = 0; i < fields.length; i++){
+			fields[i].value = null;
+		}
+	};
+
+	function backFromNewReq(){
+		show("newReq-loading");
+		hide("new-request");
+		wipeNewReqFields();
+		show("main");
+		hide("newReq-loading");
+	};
+
+	function createRequest(){
+		show("newReq-loading");
+		let amount = document.getElementById("amount");
+		let reason = document.getElementById("reason");
+		let xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				hide("new-request");
+				wipeNewReqFields();
+				show("new-request-success");
+				show("main");
+			};
+		};
+		xhttp.open("post", "/ProjectOne/createRequest.do", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("emp_id="+user.id+"&amount="+amount+"&reason="+reason);
+	}
+
+</script>
+
+<!-- ALL EMPLOYEES -->
 
 
 </div>

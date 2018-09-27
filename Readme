@@ -5,8 +5,8 @@ Expense Reimbursement System (ERS) - Presentation on first day of - Week 6
 -An Employee can logout (Complete)
 -An Employee can view the Employee Homepage (Complete)
 -An Employee can submit a reimbursement request
--An Employee can view their pending reimbursement requests
--An Employee can view their resolved reimbursement requests
+-An Employee can view their pending reimbursement requests (Complete)
+-An Employee can view their resolved reimbursement requests (Complete)
 -An Employee can view their information (Complete)
 -An Employee can update their information (Complete)
 
@@ -14,8 +14,8 @@ Expense Reimbursement System (ERS) - Presentation on first day of - Week 6
 -A Manager can logout (Complete)
 -A Manager can view the Manager Homepage (Complete)
 -A Manager can approve/deny pending reimbursement requests
--A Manager can view all pending requests from all employees
--A Manager can view all resolved requests from all employees and see which manager resolved it
+-A Manager can view all pending requests from all employees (Complete)
+-A Manager can view all resolved requests from all employees and see which manager resolved it (Complete)
 -A Manager can view all Employees
 -A Manager can view reimbursement requests from a single Employee
 -
