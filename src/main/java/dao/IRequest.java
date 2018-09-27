@@ -7,7 +7,8 @@ import models.Employee;
 
 public interface IRequest {
 	public Request getRequest(int id);
-	public List<Request> allRequests(Employee employee);
+	public List<Request> pendingRequests(int employee_id);
+	public List<Request> resolvedRequests(int employee_id);
 	public List<Request> pendingRequests();
 	public List<Request> resolvedRequests();
 	public boolean deleteRequest(Request request);

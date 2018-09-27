@@ -115,6 +115,24 @@ public class Request {
 	public boolean isDenied() {
 		return (status == 2);
 	}
+	
+	//EMPLOYEE
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
+	//MANAGER
+	public Manager getManager() {
+		return manager;
+	}
+
+	public void setManager(Manager manager) {
+		this.manager = manager;
+	}
 
 
 

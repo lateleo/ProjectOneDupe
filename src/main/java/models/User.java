@@ -39,12 +39,16 @@ public class User {
 		this.lastName = lastName;
 	}
 	
-	public String fullName() {
+	public String getFullName() {
 		return firstName.concat(" " + lastName);
 	}
 	
-	public String shortName() {
+	public String getShortName() {
 		return String.valueOf(firstName.charAt(0)).concat(". " + lastName);
+	}
+	
+	public String getNameLastFirst() {
+		return lastName.concat(", " + firstName);
 	}
 	
 	//USERNAME

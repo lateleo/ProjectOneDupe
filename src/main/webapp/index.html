@@ -1,5 +1,9 @@
 <html>
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
 <body>
+<div class="container">
 
 <!-- MISC -->
 <script>
@@ -32,15 +36,10 @@
 		};
 	};
 
-	function fullName(){
-		let name = user.firstName+" "+user.lastName;
-		return name;
-	};
-
 	function updateFullNames(){
 		let fullnames = document.getElementsByClassName("full-name");
 		for (i = 0; i < fullnames.length; i++){
-			fullnames[i].innerHTML = fullName();
+			fullnames[i].innerHTML = user.fullName;
 		};
 	};
 
@@ -53,7 +52,7 @@
 	<div><label for="username">Username:</label><input name="username" id="username" type="text"></div>
 	<div><label for="password">Password:</label><input name="password" id="password" type="password"></div>
 	<br>
-	<div><button onclick="login()">Login</button></div>
+	<div><button class="btn btn-default" onclick="login()">Login</button></div>
 	<p id="login-loading" style="display:none">Loading...</p>
 	<p id="invalid-login" style="display:none">Invalid Login. Please try again.</p>
 	<p id="logout-message" style="display:none">Logout Successful.</p>
@@ -74,8 +73,13 @@
 					password.value = null;
 					hide("login-page");
 					user = JSON.parse(this.getResponseHeader("user"));
-					updateFullNames()
-					show("emp-main");
+					if (user.isManager == 0){
+						show("new-request");
+					} else {
+						show("all-employees");
+					};
+					updateFullNames();
+					show("main");
 				} else {
 					show("invalid-login");
 				};
@@ -90,44 +94,79 @@
 
 <!-- MAIN PAGE -->
 
-<div id="emp-main" style="display:none" class="logged-in">
+<div id="main" style="display:none" class="logged-in">
 
 	<div>
 		<h1>Welcome, <span class="full-name"></span></h1>
 	</div>
-	<div id="user-options">
+	<div id="user-options-1">
 		<h3>Options:</h3>
-		<button onclick="logout()">Logout</button>
-		<button onclick="changeName()">Change Name</button>
-		<button onclick="changePassword()">Change Password</button>
-	</div>
+		<button class="btn btn-default" onclick="logout()">Logout</button>
+		<button class="btn btn-default" onclick="changeName()">Change Name</button>
+		<button class="btn btn-default" onclick="changePassword()">Change Password</button>
+	</div><br>
 	<p id="name-change-success" style="display:none">Name successfully updated.</p>
 	<p id="password-change-success" style="display:none">Name successfully updated.</p>
-	<p id="emp-main-loading" style="display:none">Loading...</p>
+	<p id="main-loading" style="display:none">Loading...</p><br>
+	<div id="user-options-2">
+		<button class="btn btn-default logged-in" id="new-request" style="display:none">Create New Request</button>
+		<button class="btn btn-default logged-in" id="all-employees" style="display:none">View All Employees</button>
+		<button class="btn btn-default" onclick="viewPendingRequests()">View Pending Requests</button>
+		<button class="btn btn-default">View Resolved Requests</button>
+	</div>
 
 </div>
 
 <script>
 
 	function logout(){
-		show("emp-main-loading");
+		show("main-loading");
 		user = null;
 		hideAll("logged-in");
 		show("logout-message");
 		show("login-page");
-		hide("emp-main-loading");
+		hide("main-loading");
 	};
 
 	function changeName(){
 		document.getElementById("firstName").value = user.firstName;
 		document.getElementById("lastName").value = user.lastName;
-		hide("emp-main");
+		hide("main");
 		show("change-name");
 	};
 
-		function changePassword(){
-		hide("emp-main");
+	function changePassword(){
+		hide("main");
 		show("change-password");
+	};
+
+	function viewPendingRequests(){
+		show("main-loading");
+		if (user.isManager == 1){
+			managerViewAllPending();
+		} else {
+			employeeViewPending();
+		};
+	};
+
+	function managerViewAllPending(){
+
+	};
+
+	function employeeViewPending(){
+		let xhttp = new XMLHttpRequest();
+
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				pendingRequests = this.getResponseHeader("pendings");
+				hide("main");
+				show("emp-view-pendings");
+			};
+		};
+		xhttp.open("post", "/ProjectOne/employeeViewPending.do", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("userId="+user.id);
+
 	};
 
 </script>
@@ -142,7 +181,7 @@
 	</div>
 	<div><label for="firstName">First Name:</label><input name="firstName" id="firstName" type="text"></div>
 	<div><label for="lastName">Last Name:</label><input name="lastName" id="lastName" type="text"></div>
-	<div><button id="saveNewName" onclick="updateName()">Save</button></div>
+	<div><button class="btn btn-default" id="saveNewName" onclick="updateName()">Save</button></div>
 	<p id="change-name-loading" style="display:none">Loading...</p>
 
 </div>
@@ -161,7 +200,7 @@
 				hide("change-name-loading");
 				show("name-change-success");
 				updateFullNames();
-				show("emp-main");
+				show("main");
 			};
 		};
 		xhttp.open("post", "/ProjectOne/updateName.do", true);
@@ -188,7 +227,7 @@
 	<div><label for="confPass">Confirm New Password:</label>
 		<input name="confPass" id="confPass" type="password"></div>
 
-	<div><button id="saveNewPassword" onclick="updatePassword()">Update Password</button></div>
+	<div><button class="btn btn-default" id="saveNewPassword" onclick="updatePassword()">Update Password</button></div>
 	<p id="change-password-loading" style="display:none">Loading...</p>
 	<p id="invalid-password" style="display:none">Invalid Password(s). Please try again.</p>
 
@@ -209,7 +248,7 @@
 					hide("change-password");
 					user = JSON.parse(this.getResponseHeader("user"));
 					show("password-change-success");
-					show("emp-main");
+					show("main");
 				} else {
 					show("invalid-password");
 				};
@@ -226,7 +265,31 @@
 
 </script>
 
+<!-- EMPLOYEE VIEW PENDINGS -->
+
+<div id="emp-view-pendings" style="display:none" class="logged-in">
+	<h1>Pending Requests for <span class="fullnames"></span></h1>
+	<table class="table table-hover">
+		<thead>
+			<th>Created On</th>
+			<th>Amount</th>
+			<th>Reason</th>
+		</thead>
+		<tbody id="emp-pending-table-body">
+			<tr>
+				<td>01/01/2000</td>
+				<td>$200.00</td>
+				<td>Because I wanted to.</td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>
+
+<script>
+</script>
 
 
+</div>
 </body>
 </html>

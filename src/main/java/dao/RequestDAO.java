@@ -42,12 +42,37 @@ public class RequestDAO implements IRequest {
 	
 
 
-	public List<Request> allRequests(Employee employee) {
+	public List<Request> pendingRequests(int employee_id) {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM requests request WHERE employee_id = ? ORDER BY date_created";
+		String sql = "SELECT * FROM requests request WHERE employee_id = ? and status = 0 ORDER BY date_created";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, employee.getId());
+			ps.setInt(1, employee_id);
+			ArrayList<Request> requests = new ArrayList<Request>();
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Request request = new Request(rs.getInt("id"),
+						rs.getInt("employee_id"),
+						rs.getInt("manager_id"),
+						rs.getTimestamp("date_created"),
+						rs.getDouble("amount"),
+						rs.getString("reason"),
+						rs.getInt("status"));
+				requests.add(request);
+			}
+			return requests;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<Request> resolvedRequests(int employee_id) {
+		Connection conn = JDBCconnection.getConnection();
+		String sql = "SELECT * FROM requests request WHERE employee_id = ? and status = 1 or 2 ORDER BY date_created";
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, employee_id);
 			ArrayList<Request> requests = new ArrayList<Request>();
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {

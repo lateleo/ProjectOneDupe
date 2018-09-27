@@ -1,0 +1,110 @@
+<html>
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+
+
+
+<!-- LOGIN -->
+<div id="login-page">
+
+	<div><h1>Please Login:</h1></div>
+	<div><label for="username">Username:</label><input name="username" id="username" type="text"></div>
+	<div><label for="password">Password:</label><input name="password" id="password" type="password"></div>
+	<br>
+	<div><button class="btn btn-default" onclick="login()">Login</button></div>
+	<p id="login-loading" style="display:none">Loading...</p>
+	<p id="invalid-login" style="display:none">Invalid Login. Please try again.</p>
+	<p id="logout-message" style="display:none">Logout Successful.</p>
+
+</div>
+
+
+<!-- MAIN PAGE -->
+
+<div id="main"  class="logged-in">
+
+	<div>
+		<h1>Welcome, <span class="full-name"></span></h1>
+	</div>
+	<div id="user-options-1">
+		<h3>Options:</h3>
+		<button class="btn btn-default"nclick="logout()">Logout</button>
+		<button class="btn btn-default"nclick="changeName()">Change Name</button>
+		<button class="btn btn-default"nclick="changePassword()">Change Password</button>
+	</div><br>
+	<p id="name-change-success" style="display:none">Name successfully updated.</p>
+	<p id="password-change-success" style="display:none">Name successfully updated.</p>
+	<p id="main-loading" style="display:none">Loading...</p><br>
+	<div id="user-options-2">
+		<button class="btn btn-default logged-in" id="new-request" style="display:none">Create New Request</button>
+		<button class="btn btn-default logged-in" id="all-employees" style="display:none">View All Employees</button>
+		<button class="btn btn-default"nclick="viewPendingRequests()">View Pending Requests</button>
+		<button class="btn btn-default">View Resolved Requests</button>
+	</div>
+
+</div>
+
+
+<!-- CHANGE NAME -->
+
+<!-- <div id="change-name"  class="logged-in">
+
+	<div>
+		<h1>Name Change</h1>
+		<h4>Please enter your new name:</h4>
+	</div>
+	<div><label for="firstName">First Name:</label><input name="firstName" id="firstName" type="text"></div>
+	<div><label for="lastName">Last Name:</label><input name="lastName" id="lastName" type="text"></div>
+	<div><button class="btn btn-default" id="saveNewName" onclick="updateName()">Save</button></div>
+	<p id="change-name-loading" style="display:none">Loading...</p>
+
+</div> -->
+
+
+<!-- CHANGE PASSWORD -->
+
+<!-- <div id="change-password"  class="logged-in">
+
+	<div>
+		<h1>Update Password:</h1>
+	</div>
+	<div><label for="oldPass">Current Password:</label>
+		<input name="oldPass" id="oldPass" type="password"></div>
+	<div><label for="newPass">New Password:</label>
+		<input name="newPass" id="newPass" type="password"></div>
+	<div><label for="confPass">Confirm New Password:</label>
+		<input name="confPass" id="confPass" type="password"></div>
+
+	<div><button class="btn btn-default" id="saveNewPassword" onclick="updatePassword()">Update Password</button></div>
+	<p id="change-password-loading" style="display:none">Loading...</p>
+	<p id="invalid-password" style="display:none">Invalid Password(s). Please try again.</p>
+
+
+</div> -->
+
+<div id="emp-view-pendings"  class="logged-in">
+	<h1>Pending Requests for <span class="fullnames"></span></h1>
+	<table class="table table-hover">
+		<thead>
+			<th>Created On</th>
+			<th>Amount</th>
+			<th>Reason</th>
+		</thead>
+		<tbody id="emp-pending-table-body">
+			<tr>
+				<td>01/01/2000</td>
+				<td>$200.00</td>
+				<td>Because I wanted to.</td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>
+
+
+</div>
+</body>
+</html>

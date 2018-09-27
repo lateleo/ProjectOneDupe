@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 import javax.servlet.ServletException;
@@ -9,28 +10,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import models.Request;
 import models.User;
+import service.RequestService;
 import service.UserService;
 import util.JSONConverter;
 
 public class ServletHelper {
 	
 	public static void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		
 		String uri = request.getRequestURI();
-		
 		if(uri.equals("/ProjectOne/login.do")) {
-			
 			login(request, response);
-
 		} else if (uri.equals("/ProjectOne/updateName.do")) {
-			
 			updateName(request, response);
-			
 		} else if (uri.equals("/ProjectOne/updatePassword.do")) {
-			
-			updatePassword(request, response);
-			
+			updatePassword(request, response);	
+		} else if (uri.equals("/ProjectOne/employeeViewPending.do")) {
+			employeeViewPending(request, response);
 		}
 	}
 	
@@ -58,21 +55,36 @@ public class ServletHelper {
 		int oldPass = Objects.hash(user.getUsername(), request.getParameter("oldPass"));
 		int newPass = Objects.hash(user.getUsername(), request.getParameter("newPass"));
 		int confPass = Objects.hash(user.getUsername(), request.getParameter("confPass"));
-		System.out.println(user.getHashedPassword());
-		System.out.println(oldPass);
-		System.out.println(newPass);
-		System.out.println(confPass);
 		if (user.getHashedPassword() == oldPass && newPass == confPass) {
-			System.out.println("true");
 			user.setHashedPassword(newPass);
 			UserService.updateUser(user);
 			response.setIntHeader("valid-passwords", 1);
 			response.setHeader("user", JSONConverter.convert(user));
 		} else {
-			System.out.println("false");
 			response.setIntHeader("valid-passwords", 0);
 		}
 
 	}
+	
+	public static void employeeViewPending(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		List<Request> pendings = RequestService.pendingRequests(Integer.valueOf(request.getParameter("userId")));
+		response.setHeader("pendings", JSONConverter.convert(pendings));
+	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
