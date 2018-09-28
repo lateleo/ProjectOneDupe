@@ -9,10 +9,13 @@
 <script>
 	var user;
 	var request;
-	var empRequests;
 	var pendingRequests;
 	var resolvedRequests;
-	var employees;
+	var allEmployees;
+	var employee;
+	var empPending;
+	var empResolved;
+
 
 	function show(id){
 		document.getElementById(id).removeAttribute("style");
@@ -51,22 +54,34 @@
 		document.getElementById(bodyId).innerHTML = "";
 	};
 
+	function addTableRow(tableBodyId, obj){
+
+	}
+
 </script>
 
 <!-- LOGIN -->
 <div id="login-page">
-
-	<div><h1>Please Login:</h1></div>
-	<div><label for="username">Username:</label><input name="username" id="username" type="text"></div>
-	<div><label for="password">Password:</label><input name="password" id="password" type="password"></div>
-	<br>
-	<div><button class="btn btn-default" onclick="login()">Login</button></div>
-	<p id="login-loading" style="display:none">Loading...</p>
-	<p id="invalid-login" style="display:none">Invalid Login. Please try again.</p>
-	<p id="logout-message" style="display:none">Logout Successful.</p>
-
+	<div class="row"><h1>Please Login:</h1></div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="row">
+				<label for="username">Username:</label><input name="username" id="username" type="text">
+			</div>
+			<div class="row">
+				<label for="password">Password:</label><input name="password" id="password" type="password">
+			</div>
+			<div class="row">
+				<button class="btn btn-default" onclick="login()">Login</button>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<p id="login-loading" style="display:none">Loading...</p>
+		<p id="invalid-login" style="display:none">Invalid Login. Please try again.</p>
+		<p id="logout-message" style="display:none">Logout Successful.</p>
+	</div>
 </div>
-
 <script>
 	function login(){
 		show("login-loading");
@@ -103,29 +118,36 @@
 <!-- MAIN PAGE -->
 
 <div id="main" style="display:none" class="logged-in">
-
-	<div>
+	<div class="row">
 		<h1>Welcome, <span class="full-name"></span></h1>
 	</div>
-	<div id="user-options-1">
-		<h3>Options:</h3>
-		<button class="btn btn-default" onclick="logout()">Logout</button>
-		<button class="btn btn-default" onclick="changeName()">Change Name</button>
-		<button class="btn btn-default" onclick="changePassword()">Change Password</button>
-	</div><br>
-	<p id="name-change-success" style="display:none" class="success">Name successfully updated.</p>
-	<p id="new-request-success" style="display:none" class="success">Request successfully submitted.</p>
-	<p id="password-change-success" style="display:none" class="success">Name successfully updated.</p>
-	<p id="main-loading" style="display:none">Loading...</p><br>
-	<div id="user-options-2">
-		<button class="btn btn-default logged-in" onclick="newRequest()" id="new-request" style="display:none">Create New Request</button>
-		<button class="btn btn-default logged-in" id="all-employees" style="display:none">View All Employees</button>
-		<button class="btn btn-default" onclick="viewPendingRequests()">View Pending Requests</button>
-		<button class="btn btn-default" onclick="viewResolvedRequests()">View Resolved Requests</button>
+	<div class="row" id="user-options-1">
+		<div class="col-xs-6">
+			<h3>Options:</h3>
+			<div class="row">
+				<button class="btn btn-default col-sm-4" onclick="logout()">Logout</button>
+				<button class="btn btn-default col-sm-4" onclick="changeName()">Change Name</button>
+				<button class="btn btn-default col-sm-4" onclick="changePassword()">Change Password</button>			
+			</div>
+		</div>
 	</div>
-
+	<div class="row" id="user-options-2">
+		<div class="col-xs-6">
+			<button class="btn btn-default logged-in col-sm-4" onclick="newRequest()" id="new-request"
+				style="display:none">Create New Request</button>
+			<button class="btn btn-default logged-in col-sm-4" onclick="allEmployees()" id="all-employees"
+				style="display:none">View All Employees</button>
+			<button class="btn btn-default col-sm-4" onclick="viewPendingRequests()">View Pending Requests</button>
+			<button class="btn btn-default col-sm-4" onclick="viewResolvedRequests()">View Resolved Requests</button>
+		</div>
+	</div>
+	<div class="row">
+		<p id="name-change-success" style="display:none" class="success">Name successfully updated.</p>
+		<p id="new-request-success" style="display:none" class="success">Request successfully submitted.</p>
+		<p id="password-change-success" style="display:none" class="success">Name successfully updated.</p>
+		<p id="main-loading" style="display:none">Loading...</p>
+	</div>
 </div>
-
 <script>
 
 	function logout(){
@@ -180,19 +202,38 @@
 <!-- CHANGE NAME -->
 
 <div id="change-name" style="display:none" class="logged-in">
-
-	<div>
+	<div class="row">
 		<h1>Name Change</h1>
+		<button onclick="backFromChangeName()">Back</button>
+	</div>
+	<div class="row">
 		<h4>Please enter your new name:</h4>
 	</div>
-	<div><label for="firstName">First Name:</label><input name="firstName" id="firstName" type="text"></div>
-	<div><label for="lastName">Last Name:</label><input name="lastName" id="lastName" type="text"></div>
-	<div><button class="btn btn-default" id="saveNewName" onclick="updateName()">Save</button></div>
-	<p id="change-name-loading" style="display:none">Loading...</p>
-
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="row">
+				<div class="col-sm-6"><label for="firstName">First Name:</label></div>
+				<div class="col-sm-6"><input name="firstName" id="firstName" type="text"></div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6"><label for="lastName">Last Name:</label></div>
+				<div class="col-sm-6"><input name="lastName" id="lastName" type="text"></div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6"><span id="change-name-loading" style="display:none">Loading...</span></div>
+				<div class="col-sm-6"><button class="btn btn-default" id="saveNewName"
+					onclick="updateName()">Save</button></div>
+			</div>
+		</div>
+	</div>
 </div>
-
 <script>
+	function backFromChangeName(){
+		show("change-name-loading");
+		hide("change-name");
+		show("main");
+		hide("change-name-loading");
+	}
 
 	function updateName(){
 		show("change-name-loading");
@@ -222,25 +263,46 @@
 <!-- CHANGE PASSWORD -->
 
 <div id="change-password" style="display:none" class="logged-in">
-
-	<div>
+	<div class="row">
 		<h1>Update Password:</h1>
+		<button onclick="backFromChangePassword()">Back</button>
 	</div>
-	<div><label for="oldPass">Current Password:</label>
-		<input name="oldPass" id="oldPass" type="password"></div>
-	<div><label for="newPass">New Password:</label>
-		<input name="newPass" id="newPass" type="password"></div>
-	<div><label for="confPass">Confirm New Password:</label>
-		<input name="confPass" id="confPass" type="password"></div>
-
-	<div><button class="btn btn-default" id="saveNewPassword" onclick="updatePassword()">Update Password</button></div>
-	<p id="change-password-loading" style="display:none">Loading...</p>
-	<p id="invalid-password" style="display:none">Invalid Password(s). Please try again.</p>
-
-
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="row">
+				<div class="col-sm-6"><label for="oldPass">Current Password:</label></div>
+				<div class="col-sm-6"><input name="oldPass" id="oldPass" type="password"></div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6"><label for="newPass">New Password:</label></div>
+				<div class="col-sm-6"><input name="newPass" id="newPass" type="password"></div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6"><label for="confPass">Confirm New Password:</label></div>
+				<div class="col-sm-6"><input name="confPass" id="confPass" type="password"></div>
+			</div>
+			<div class="row">
+				<p id="invalid-password" style="display:none">Invalid Password(s). Please try again.</p>
+			</div>
+			<div class="row">
+				<div class="col-sm-6"><p id="change-password-loading" style="display:none">Loading...</p></div>
+				<div class="col-sm-6"><button class="btn btn-default" id="saveNewPassword"
+					onclick="updatePassword()">Update Password</button></div>
+			</div>
+		</div>
+	</div>
 </div>
-
 <script>
+
+	function backFromChangePassword(){
+		show("change-password-loading");
+		document.getElementById("oldPass").value = null;
+		document.getElementById("newPass").value = null;
+		document.getElementById("confPass").value = null;
+		hide("change-password");
+		show("main");
+		hide("change-password-loading")
+	}
 
 	function updatePassword(){
 		show("change-password-loading");
@@ -274,34 +336,38 @@
 <!-- EMPLOYEE VIEW PENDING -->
 
 <div id="emp-view-pending" style="display:none" class="logged-in">
-	<h1>Pending Requests for <span class="full-name"></span></h1>
-	<div>
-		<button class="btn btn-default" onclick="backFromEVP()">Back</button>
-		<p id="evp-loading" style="display:none">Loading...</p>
+	<div class="row">
+		<h1>Pending Requests for <span class="full-name"></span></h1>
 	</div>
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>Created On</th>
-				<th>Amount</th>
-				<th>Reason</th>
-			</tr>
-		</thead>
-		<tbody id="emp-pending-table-body"></tbody>
-	</table>
-
+	<div class="row">
+		<div class="col-sm-3"><button class="btn btn-default" onclick="backFromEVP()">Back</button></div>
+		<div class="col-sm-3"><span id="evp-loading" style="display:none">Loading...</span></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-10">
+			<table class="table table-hover">
+				<thead>
+					<tr class="row">
+						<th class="col-xs-2">Created On</th>
+						<th class="col-xs-2">Amount</th>
+						<th class="col-xs-8">Reason</th>
+					</tr>
+				</thead>
+				<tbody id="emp-pending-table" ></tbody>
+			</table>
+		</div>		
+	</div>
 </div>
-
 <script>
 
 	function fillEmployeePending(){
-		let table = document.getElementById("emp-pending-table-body");
+		let table = document.getElementById("emp-pending-table");
 		for (i = 0; i < pendingRequests.length; i++){
-			table.innerHTML += "<tr><td>"+pendingRequests[i].dateCreated+
-			"</td><td>"+formatAmount(pendingRequests[i].amount)+
-			"</td><td>"+pendingRequests[i].reason+"</td></tr>";
+			table.innerHTML += "<tr class='row'><td class='col-xs-2'>"+pendingRequests[i].dateCreated+
+			"</td><td class='col-xs-2'>"+formatAmount(pendingRequests[i].amount)+
+			"</td><td class='col-xs-8'>"+pendingRequests[i].reason+"</td></tr>";
 		};
-	}
+	};
 
 	function employeeViewPending(){
 		let xhttp = new XMLHttpRequest();
@@ -322,7 +388,7 @@
 	function backFromEVP(){
 		show("evp-loading");
 		hide("emp-view-pending");
-		wipeTable("emp-pending-table-body");
+		wipeTable("emp-pending-table");
 		pendingRequests = null;
 		show("main");
 		hide("evp-loading");
@@ -333,37 +399,42 @@
 <!-- EMPLOYEE VIEW RESOLVED -->
 
 <div id="emp-view-resolved" style="display:none" class="logged-in">
-	<h1>Resolved Requests for <span class="full-name"></span></h1>
-	<div>
-		<button class="btn btn-default" onclick="backFromEVR()">Back</button>
-		<p id="evr-loading" style="display:none">Loading...</p>
+	<div class="row">
+		<h1>Resolved Requests for <span class="full-name"></span></h1>
 	</div>
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>Created On</th>
-				<th>Amount</th>
-				<th>Reason</th>
-				<th>Status</th>
-				<th>Resolved By</th>
-			</tr>
-		</thead>
-		<tbody id="emp-resolved-table-body"></tbody>
-	</table>
-
+	<div class="row">
+		<div class="col-sm-3"><button class="btn btn-default" onclick="backFromEVR()">Back</button></div>
+		<div class="col-sm-3"><span id="evr-loading" style="display:none">Loading...</span></div>	
+	</div>
+	<div class="row">
+		<div class="col-xs-10">
+			<table class="table table-hover">
+				<thead>
+					<tr class="row">
+						<th class="col-xs-1">Created On</th>
+						<th class="col-xs-1">Amount</th>
+						<th class="col-xs-8">Reason</th>
+						<th class="col-xs-1">Status</th>
+						<th class="col-xs-1">Resolved By</th>
+					</tr>
+				</thead>
+				<tbody id="emp-resolved-table"></tbody>
+			</table>
+		</div>
+	</div>
 </div>
 <script>
 
 	function fillEmployeeResolved(){
-		let table = document.getElementById("emp-resolved-table-body");
+		let table = document.getElementById("emp-resolved-table");
 		for (i = 0; i < resolvedRequests.length; i++){
-			table.innerHTML += "<tr><td>"+resolvedRequests[i].dateCreated+
-			"</td><td>"+formatAmount(resolvedRequests[i].amount)+
-			"</td><td>"+resolvedRequests[i].reason+
-			"</td><td>"+resolvedRequests[i].statusStr+
-			"</td><td>"+resolvedRequests[i].manager.fullName+"</td></tr>";
+			table.innerHTML += "<tr class='row'><td class='col-xs-1'>"+resolvedRequests[i].dateCreated+
+			"</td><td class='col-xs-1'>"+formatAmount(resolvedRequests[i].amount)+
+			"</td><td class='col-xs-8'>"+resolvedRequests[i].reason+
+			"</td><td class='col-xs-1'>"+resolvedRequests[i].statusStr+
+			"</td><td class='col-xs-1'>"+resolvedRequests[i].manager.fullName+"</td></tr>";
 		};
-	}
+	};
 
 	function employeeViewResolved(){
 		let xhttp = new XMLHttpRequest();
@@ -384,54 +455,59 @@
 	function backFromEVR(){
 		show("evr-loading");
 		hide("emp-view-resolved");
-		wipeTable("emp-resolved-table-body");
+		wipeTable("emp-resolved-table");
 		resolvedRequests = null;
 		show("main");
 		hide("evr-loading");
-	}
+	};
 
 </script>
 
 <!-- MANAGER VIEW PENDING -->
 
 <div id="mgr-view-pending" style="display:none" class="logged-in">
-	<h1>Pending Requests</h1>
-	<div>
-		<button class="btn btn-default" onclick="backFromMVP()">Back</button>
-		<p id="mvp-loading" style="display:none">Loading...</p>
+	<div class="row">
+		<h1>Pending Requests</h1>
 	</div>
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>Created On</th>
-				<th>Created By</th>
-				<th>Amount</th>
-				<th>Reason</th>
-				<th>Approve/Deny</th>
-			</tr>
-		</thead>
-		<tbody id="mgr-pending-table-body"></tbody>
-	</table>
+	<div class="row">
+		<div class="col-sm-3"><button class="btn btn-default" onclick="backFromMVP()">Back</button></div>
+		<div class="col-sm-3"><span id="mvp-loading" style="display:none">Loading...</span></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-10">
+			<table class="table table-hover">
+				<thead>
+					<tr class="row">
+						<th class="col-xs-1">Created On</th>
+						<th class="col-xs-1">Created By</th>
+						<th class="col-xs-1">Amount</th>
+						<th class="col-xs-6">Reason</th>
+						<th class="col-xs-3">Approve/Deny</th>
+					</tr>
+				</thead>
+				<tbody id="mgr-pending-table"></tbody>
+			</table>
+		</div>
+	</div>
 </div>
-
 <script>
 
 	function fillManagerPending(){
-		let table = document.getElementById("mgr-pending-table-body");
+		let table = document.getElementById("mgr-pending-table");
 		for (i = 0; i < pendingRequests.length; i++){
 			let dropdown = "<select id='pending-select-"+pendingRequests[i].id+"'>"+
 			"<option disabled selected></option><option value=1>Approve</option><option value=2>Deny</option>"+
 			"</select>";
 			let button = "<button class='btn btn-default btn-xs' onclick='approveDenyRequest("+
-			pendingRequests[i].id+")'>Submit</button>";
-			table.innerHTML += "<tr id=pend-row-"+pendingRequests[i].id+"><td>"+
-			pendingRequests[i].dateCreated+"</td><td>"+
-			pendingRequests[i].employee.fullName+"</td><td>"+
-			formatAmount(pendingRequests[i].amount)+"</td><td>"+
-			pendingRequests[i].reason+"</td><td id='dropdown-"+pendingRequests[i].id+"'>"+
+			pendingRequests[i].id+","+i+")'>Submit</button>";
+			table.innerHTML += "<tr class='row' id=pend-row-"+pendingRequests[i].id+"><td class='col-xs-1'>"+
+			pendingRequests[i].dateCreated+"</td><td class='col-xs-1'>"+
+			pendingRequests[i].employee.fullName+"</td><td class='col-xs-1'>"+
+			formatAmount(pendingRequests[i].amount)+"</td><td class='col-xs-6'>"+
+			pendingRequests[i].reason+"</td><td id='dropdown-"+pendingRequests[i].id+"' class='col-xs-3'>"+
 			dropdown+button+"</td></tr>";
 		};
-	}
+	};
 
 	function managerViewAllPending(){
 		let xhttp = new XMLHttpRequest();
@@ -452,26 +528,20 @@
 	function backFromMVP(){
 		show("mvp-loading");
 		hide("mgr-view-pending");
-		wipeTable("mgr-pending-table-body");
+		wipeTable("mgr-pending-table");
 		pendingRequests = null;
 		show("main");
 		hide("mvp-loading");
-	}
-
-	function removeFromPending(id){
-		for (i = 0; i > pendingRequests.length; i++){
-			if (pendingRequests[i].id == id) pendingRequests.splice(i,1);
-		};
-		document.getElementById("pend-row-"+id).remove();
 	};
 
-	function approveDenyRequest(id){
+	function approveDenyRequest(id,index){
 		let status = document.getElementById("pending-select-"+id).value;
 		if (status != null){
 			let xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
-					removeFromPending(id);
+					pendingRequests.splice(index,1);
+					document.getElementById("pend-row-"+id).remove();
 				};
 			};
 			xhttp.open("post", "/ProjectOne/approveDenyRequest.do", true);
@@ -485,38 +555,44 @@
 <!-- MANAGER VIEW RESOLVED -->
 
 <div id="mgr-view-resolved" style="display:none" class="logged-in">
-	<h1>Resolved Requests</h1>
-	<div>
-		<button class="btn btn-default" onclick="backFromMVR()">Back</button>
-		<p id="mvr-loading" style="display:none">Loading...</p>
+	<div class="row">
+		<h1>Resolved Requests</h1>
 	</div>
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>Created On</th>
-				<th>Created By</th>
-				<th>Amount</th>
-				<th>Reason</th>
-				<th>Status</th>
-				<th>Resolved By</th>
-			</tr>
-		</thead>
-		<tbody id="mgr-resolved-table-body"></tbody>
-	</table>
+	<div class="row">
+		<div class="col-sm-3"><button class="btn btn-default" onclick="backFromMVR()">Back</button></div>
+		<div class="col-sm-3"><span id="mvr-loading" style="display:none">Loading...</span></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-10">
+			<table class="table table-hover">
+				<thead>
+					<tr class="row">
+						<th class="col-xs-1">Created On</th>
+						<th class="col-xs-1">Created By</th>
+						<th class="col-xs-1">Amount</th>
+						<th class="col-xs-7">Reason</th>
+						<th class="col-xs-1">Status</th>
+						<th class="col-xs-1">Resolved By</th>
+					</tr>
+				</thead>
+				<tbody id="mgr-resolved-table"></tbody>
+			</table>
+		</div>
+	</div>
+
 
 </div>
-
 <script>
 
 	function fillManagerResolved(){
-		let table = document.getElementById("mgr-resolved-table-body");
+		let table = document.getElementById("mgr-resolved-table");
 		for (i = 0; i < resolvedRequests.length; i++){
-			table.innerHTML += "<tr><td>"+resolvedRequests[i].dateCreated+
-			"</td><td>"+resolvedRequests[i].employee.fullName+
-			"</td><td>"+formatAmount(resolvedRequests[i].amount)+
-			"</td><td>"+resolvedRequests[i].reason+
-			"</td><td>"+resolvedRequests[i].statusStr+
-			"</td><td>"+resolvedRequests[i].manager.fullName+"</td></tr>";
+			table.innerHTML += "<tr class='row'><td class='col-xs-1'>"+resolvedRequests[i].dateCreated+
+			"</td><td class='col-xs-1'>"+resolvedRequests[i].employee.fullName+
+			"</td><td class='col-xs-1'>"+formatAmount(resolvedRequests[i].amount)+
+			"</td><td class='col-xs-7'>"+resolvedRequests[i].reason+
+			"</td><td class='col-xs-1'>"+resolvedRequests[i].statusStr+
+			"</td><td class='col-xs-1'>"+resolvedRequests[i].manager.fullName+"</td></tr>";
 		};
 	}
 
@@ -539,7 +615,7 @@
 	function backFromMVR(){
 		show("mvr-loading");
 		hide("mgr-view-resolved");
-		wipeTable("mgr-resolved-table-body");
+		wipeTable("mgr-resolved-table");
 		resolvedRequests = null;
 		show("main");
 		hide("mgr-loading");
@@ -550,21 +626,31 @@
 <!-- NEW REQUEST -->
 
 <div id="new-request" style="display:none" class="logged-in">
-	<h1>New Reimbursement Request:</h1>
-	<p id="newReq-loading" style="display:none">Loading...</p>
-	<div>
-		<label for="amount">Amount:</label><input name="amount" id="amount" type="text" class="newReq">
+	<div class="row">
+		<h1>New Reimbursement Request:</h1>
 	</div>
-	<div>
-		<label for="reason">Reason:</label><textarea name="reason" id="reason" class="newReq"></textarea>
+	<div class="row">
+		<div class="col-sm-3"><button class="btn btn-default" onclick="backFromNewReq()">Back</button></div>
+		<div class="col-sm-3"><span id="new-req-loading" style="display:none">Loading...</span></div>
 	</div>
-	<div>
-		<button onclick="createRequest()">Create</button>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="row">
+				<div class="col-sm-6"><label for="amount">Amount:</label></div>
+				<div class="col-sm-6"><input name="amount" id="amount" type="text" class="newReq"></div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6"><label for="reason">Reason:</label></div>
+				<div class="col-sm-6"><textarea name="reason" id="reason" class="newReq"></textarea></div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6"></div>
+				<div class="col-sm-6"><button class="btn btn-default" id="createRequest"
+					onclick="createRequest()">Create</button></div>
+			</div>
+		</div>
 	</div>
-
-
 </div>
-
 <script>
 
 	function wipeNewReqFields(){
@@ -575,15 +661,15 @@
 	};
 
 	function backFromNewReq(){
-		show("newReq-loading");
+		show("new-req-loading");
 		hide("new-request");
 		wipeNewReqFields();
 		show("main");
-		hide("newReq-loading");
+		hide("new-req-loading");
 	};
 
 	function createRequest(){
-		show("newReq-loading");
+		show("new-req-loading");
 		let amount = document.getElementById("amount");
 		let reason = document.getElementById("reason");
 		let xhttp = new XMLHttpRequest();
@@ -593,6 +679,7 @@
 				wipeNewReqFields();
 				show("new-request-success");
 				show("main");
+				hide("new-req-loading");
 			};
 		};
 		xhttp.open("post", "/ProjectOne/createRequest.do", true);
@@ -604,6 +691,232 @@
 
 <!-- ALL EMPLOYEES -->
 
+<div id="all-employees" style="display:none" class="logged-in">
+	<div class="row">
+		<h1>All Employees</h1>
+	</div>
+	<div class="row">
+		<div class="col-sm-3"><button class="btn btn-default" onclick="backFromAllEmps()">Back</button></div>
+		<div class="col-sm-3"><p id="all-emps-loading" style="display:none">Loading...</p></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-8">
+			<table class="table table-hover">
+				<thead>
+					<tr class="row">
+						<th class="col-xs-3">First Name</th>
+						<th class="col-xs-3">Last Name</th>
+						<th class="col-xs-6">View Requests</th>
+					</tr>
+				</thead>
+				<tbody id="all-emps-table"></tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script>
+
+	function backFromAllEmps(){
+		show("all-emps-loading");
+		hide("all-employees");
+		allEmployees = null;
+		wipeTable("all-emps-table");
+		show("main");
+		hide("all-emps-loading");
+	};
+
+	function fillAllEmployees(){
+		let table = document.getElementById("all-emps-table");
+		for (i = 0; i < allEmployees.length; i++){
+			table.innerHTML += "<tr class='row'><td class='col-xs-3'>"+allEmployees[i].firstName+
+			"</td><td class='col-xs-3'>"+allEmployees[i].lastName+"</td><td class='col-xs-3'>"+
+			"<button class='btn btn-default btn-xs' onclick='viewEmployee("+allEmployees[i]+
+			")'>View</button></td></tr>";
+		};		
+	}
+
+	function allEmployees(){
+		show("main-loading");
+		let xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				allEmployees = JSON.parse(this.getResponseHeader("employees"));
+				fillAllEmployees();
+				hide("main");
+				show("all-employees");
+				hide("main-loading");
+			};
+		};
+		xhttp.open("post", "/ProjectOne/allEmployees.do", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send();
+	}
+
+</script>
+
+<!-- VIEW EMPLOYEE -->
+
+<div id="view-employee" style="display:none" class="logged-in">
+	<div class="row">
+		<h1>View Employee: <span id="emp-full-name"></span></h1>
+	</div>
+	<div class="row">
+		<div class="col-xs-3"><button class="btn btn-default" onclick="backFromViewEmp()">Back</button></div>
+		<div class="col-xs-3"><span id="view-emp-loading" style="display:none">Loading...</span></div>	
+	</div>
+	<div class="row">
+		<div class="col-xs-3">
+			<button class="btn btn-default" onclick="mgrViewEmpPending()">Pending Requests</button>
+		</div>
+		<div class="col-xs-3">
+			<button class="btn btn-default" onclick="mgrViewEmpResolved()">Pending Resolved</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-10">
+			<h4>Pending Requests for: <span id="emp-full-name"></span></h4>
+			<table class="table table-hover" style="display:none">
+				<thead>
+					<tr class="row">
+						<th class="col-xs-2">Created On</th>
+						<th class="col-xs-2">Amount</th>
+						<th class="col-xs-5">Reason</th>
+						<th class="col-xs-3">Approve/Deny</th>
+					</tr>
+				</thead>
+				<tbody id="mgr-emp-pending-table"></tbody>
+			</table>
+		</div>
+		<div class="col-xs-10">
+			<table class="table table-hover" style="display:none">
+				<thead>
+					<tr class="row">
+						<th class="col-xs-1">Created On</th>
+						<th class="col-xs-1">Amount</th>
+						<th class="col-xs-8">Reason</th>
+						<th class="col-xs-1">Status</th>
+						<th class="col-xs-1">Resolved By</th>
+					</tr>
+				</thead>
+				<tbody id="mgr-emp-resolved-table"></tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script>
+
+	function updateEmpFullNames(){
+		let fullnames = document.getElementsByClassName("emp-full-name");
+		for (i = 0; i < fullnames.length; i++){
+			fullnames[i].innerHTML = employee.fullName;
+		};
+	};
+
+	function wipeEmpFullNames(){
+		let fullnames = document.getElementsByClassName("emp-full-name");
+		for (i = 0; i < fullnames.length; i++){
+			fullnames[i].innerHTML = null;
+		};
+	}
+
+	function backFromViewEmp(){
+		show("view-emp-loading");
+		employee = null;
+		empPending = null;
+		empResolved = null;
+		hide("view-employee");
+		show("main");
+		wipeTable("mgr-emp-pending-table");
+		wipeTable("mgr-emp-resolved-table");
+		wipeEmpFullNames();
+		hide("view-emp-loading");
+	}
+
+	function viewEmployee(emp){
+		show("all-emps-loading");
+		employee = emp;
+		updateEmpFullNames();
+		let xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				empPending = JSON.parse(this.getResponseHeader("pending"));
+				empResolved = JSON.parse(this.getResponseHeader("resolved"));
+				hide("all-employees");
+				show("view-employee");
+				hide("all-emps-loading");
+			};
+		};
+		xhttp.open("post", "/ProjectOne/viewEmployee.do", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send();
+	};
+
+	function approveDenyEmpReq(id,index){
+		let status = document.getElementById("emp-pending-select-"+id).value;
+		if (status != null){
+			let xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					let req = empPending[index];
+					empPending.splice(index,1);
+					empResolved.push(req);
+					empResolved.sort(function(a,b){a.dateCreated - b.dateCreated});
+					document.getElementById("emp-pend-row-"+id).remove();
+				};
+			};
+			xhttp.open("post", "/ProjectOne/approveDenyEmpReq.do", true);
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send("id="+id+"&status="+status);	
+		};
+	};
+
+	function fillMgrEmpPending(){
+		let table = document.getElementById("mgr-emp-pending-table");
+		for (i = 0; i < empPending.length; i++){
+			let dropdown = "<select id='emp-pending-select-"+empPending[i].id+"'>"+
+			"<option disabled selected></option><option value=1>Approve</option><option value=2>Deny</option>"+
+			"</select>";
+			let button = "<button class='btn btn-default btn-xs' onclick='approveDenyEmpReq("+
+			empPending[i].id+","+i+")'>Submit</button>";
+			table.innerHTML += "<tr class='row' id=emp-pend-row-"+empPending[i].id+"><td class='col-xs-2'>"+
+			empPending[i].dateCreated+"</td><td class='col-xs-2'>"+
+			formatAmount(empPending[i].amount)+"</td><td class='col-xs-5'>"+
+			empPending[i].reason+"</td><td id='dropdown-"+empPending[i].id+"' class='col-xs-3'>"+
+			dropdown+button+"</td></tr>";
+		};
+	};
+
+	function mgrViewEmpPending(){
+		show("view-emp-loading");
+		fillMgrEmpPending();
+		hide("mgr-emp-resolved-table");
+		wipeTable("mgr-emp-resolved-table");
+		show("mgr-emp-pending-table");
+		hide("view-emp-loading");
+	}
+
+	function fillManagerResolved(){
+		let table = document.getElementById("mgr-resolved-table");
+		for (i = 0; i < empResolved.length; i++){
+			table.innerHTML += "<tr class='row'><td class='col-xs-1'>"+empResolved[i].dateCreated+
+			"</td><td class='col-xs-1'>"+formatAmount(empResolved[i].amount)+
+			"</td><td class='col-xs-8'>"+empResolved[i].reason+
+			"</td><td class='col-xs-1'>"+empResolved[i].statusStr+
+			"</td><td class='col-xs-1'>"+empResolved[i].manager.fullName+"</td></tr>";
+		};
+	}
+
+	function mgrViewEmpResolved(){
+		show("view-emp-loading");
+		fillMgrEmpResolved();
+		hide("mgr-emp-pending-table");
+		wipeTable("mgr-emp-pending-table");
+		show("mgr-emp-resolved-table");
+		hide("view-emp-loading");
+	};
+
+</script>
 
 </div>
 </body>

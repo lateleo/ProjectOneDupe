@@ -122,7 +122,11 @@ public class Request {
 
 	}
 	
-	public String getDateCreated() {
+	public Timestamp getDateCreated() {
+		return dateCreated;
+	}
+	
+	public String getStrDateCreated() {
 		return getDate()+", "+getTime();
 	}
 	
