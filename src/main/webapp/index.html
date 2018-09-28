@@ -54,32 +54,41 @@
 		document.getElementById(bodyId).innerHTML = "";
 	};
 
-	function addTableRow(tableBodyId, obj){
-
+	function addBlankRow(tableId){
+		let table = document.getElementById(tableId);
+		table.innerHTML += "<tr class='row'><td><em>(None)</em></td></tr>";
 	}
 
 </script>
 
 <!-- LOGIN -->
 <div id="login-page">
-	<div class="row"><h1>Please Login:</h1></div>
 	<div class="row">
-		<div class="col-xs-12">
-			<div class="row">
-				<label for="username">Username:</label><input name="username" id="username" type="text">
+		<h1>Please Login:</h1>
+	</div>
+	<div class="row"><p id="logout-message" style="display:none">Logout Successful.</p></div>
+	<div class="row">
+		<div class="col-xs-12 form-horizontal">
+			<div class="form-group">
+				<label for="username" class="col-xs-1 control-label">Username:</label>
+				<div class="col-xs-4">
+					<input name="username" class="form-control" id="username" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="password" class="col-xs-1 control-label">Password:</label>
+				<div class="col-xs-4">
+					<input name="password" class="form-control" id="password" type="password">
+				</div>
 			</div>
 			<div class="row">
-				<label for="password">Password:</label><input name="password" id="password" type="password">
-			</div>
-			<div class="row">
-				<button class="btn btn-default" onclick="login()">Login</button>
+				<button class="btn btn-default col-sm-2" onclick="login()">Login</button>
+				<div class="col-sm-6">
+					<span id="login-loading" style="display:none">Loading...</span>
+					<span id="invalid-login" style="display:none">Invalid Login. Please try again.</span>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<p id="login-loading" style="display:none">Loading...</p>
-		<p id="invalid-login" style="display:none">Invalid Login. Please try again.</p>
-		<p id="logout-message" style="display:none">Logout Successful.</p>
 	</div>
 </div>
 <script>
@@ -122,23 +131,28 @@
 		<h1>Welcome, <span class="full-name"></span></h1>
 	</div>
 	<div class="row" id="user-options-1">
-		<div class="col-xs-6">
+		<div class="col-xs-10">
 			<h3>Options:</h3>
 			<div class="row">
-				<button class="btn btn-default col-sm-4" onclick="logout()">Logout</button>
-				<button class="btn btn-default col-sm-4" onclick="changeName()">Change Name</button>
-				<button class="btn btn-default col-sm-4" onclick="changePassword()">Change Password</button>			
+				<button class="btn btn-default col-xs-8 col-sm-4 col-md-3"
+					onclick="logout()">Logout</button> 
+				<button class="btn btn-default col-xs-8 col-sm-4 col-md-3"
+					onclick="changeName()">Change Name</button> 
+				<button class="btn btn-default col-xs-8 col-sm-4 col-md-3"
+					onclick="changePassword()">Change Password</button>			
 			</div>
 		</div>
 	</div>
 	<div class="row" id="user-options-2">
-		<div class="col-xs-6">
-			<button class="btn btn-default logged-in col-sm-4" onclick="newRequest()" id="new-request"
-				style="display:none">Create New Request</button>
-			<button class="btn btn-default logged-in col-sm-4" onclick="allEmployees()" id="all-employees"
-				style="display:none">View All Employees</button>
-			<button class="btn btn-default col-sm-4" onclick="viewPendingRequests()">View Pending Requests</button>
-			<button class="btn btn-default col-sm-4" onclick="viewResolvedRequests()">View Resolved Requests</button>
+		<div class="col-xs-10">
+			<div class="row">
+				<button class="btn btn-default logged-in col-xs-8 col-sm-4 col-md-3" onclick="newRequest()" id="new-request"
+					style="display:none">Create New Request</button>
+				<button class="btn btn-default logged-in col-xs-8 col-sm-4 col-md-3" onclick="allEmployees()" id="all-employees"
+					style="display:none">View All Employees</button>
+				<button class="btn btn-default col-xs-8 col-sm-4 col-md-3" onclick="viewPendingRequests()">View Pending Requests</button>
+				<button class="btn btn-default col-xs-8 col-sm-4 col-md-3" onclick="viewResolvedRequests()">View Resolved Requests</button>
+			</div>
 		</div>
 	</div>
 	<div class="row">
@@ -194,7 +208,7 @@
 	function newRequest(){
 		hide("main");
 		hideAll("success");
-		show("new-request");
+		show("create-new-request");
 	}
 
 </script>
@@ -204,25 +218,29 @@
 <div id="change-name" style="display:none" class="logged-in">
 	<div class="row">
 		<h1>Name Change</h1>
-		<button onclick="backFromChangeName()">Back</button>
+		<button class="btn btn-default" onclick="backFromChangeName()">Back</button>
 	</div>
 	<div class="row">
 		<h4>Please enter your new name:</h4>
 	</div>
 	<div class="row">
-		<div class="col-sm-6">
-			<div class="row">
-				<div class="col-sm-6"><label for="firstName">First Name:</label></div>
-				<div class="col-sm-6"><input name="firstName" id="firstName" type="text"></div>
+		<div class="col-xs-10 form-horizontal">
+			<div class="form-group">
+				<label for="firstName" class="col-xs-2 control-label">First Name:</label>
+				<div class="col-xs-4">
+					<input name="firstName" class="form-control" id="firstName" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="lastName" class="col-xs-2 control-label">Last Name:</label>
+				<div class="col-xs-4">
+					<input name="lastName" class="form-control" id="lastName" type="text">
+				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-6"><label for="lastName">Last Name:</label></div>
-				<div class="col-sm-6"><input name="lastName" id="lastName" type="text"></div>
-			</div>
-			<div class="row">
-				<div class="col-sm-6"><span id="change-name-loading" style="display:none">Loading...</span></div>
-				<div class="col-sm-6"><button class="btn btn-default" id="saveNewName"
-					onclick="updateName()">Save</button></div>
+				<div class="col-sm-3"><span id="change-name-loading" style="display:none">Loading...</span></div>
+				<button class="btn btn-default col-xs-2" id="saveNewName"
+					onclick="updateName()">Save</button>
 			</div>
 		</div>
 	</div>
@@ -253,9 +271,6 @@
 		xhttp.open("post", "/ProjectOne/updateName.do", true);
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		xhttp.send("id="+user.id+"&firstName="+firstName+"&lastName="+lastName);
-		console.log(user.id);
-		console.log(firstName);
-		console.log(lastName);
 	};
 
 </script>
@@ -265,29 +280,29 @@
 <div id="change-password" style="display:none" class="logged-in">
 	<div class="row">
 		<h1>Update Password:</h1>
-		<button onclick="backFromChangePassword()">Back</button>
+		<button class="btn btn-default" onclick="backFromChangePassword()">Back</button>
 	</div>
 	<div class="row">
-		<div class="col-sm-6">
-			<div class="row">
-				<div class="col-sm-6"><label for="oldPass">Current Password:</label></div>
-				<div class="col-sm-6"><input name="oldPass" id="oldPass" type="password"></div>
+		<div class="col-sm-8 form-horizontal">
+			<div class="form-group">
+				<label for="oldPass" class="col-xs-4 control-label">Current Password:</label>
+				<div class="col-xs-6"><input name="oldPass" class="form-control" id="oldPass" type="password"></div>
+			</div>
+			<div class="form-group">
+				<label for="newPass" class="col-xs-4 control-label">New Password:</label>
+				<div class="col-xs-6"><input name="newPass" class="form-control" id="newPass" type="password"></div>
+			</div>
+			<div class="form-group">
+				<label for="confPass" class="col-xs-4 control-label">Confirm New Password:</label>
+				<div class="col-xs-6"><input name="confPass" class="form-control" id="confPass" type="password"></div>
 			</div>
 			<div class="row">
-				<div class="col-sm-6"><label for="newPass">New Password:</label></div>
-				<div class="col-sm-6"><input name="newPass" id="newPass" type="password"></div>
+				<span id="invalid-password" style="display:none">Invalid Password(s). Please try again.</span>
 			</div>
 			<div class="row">
-				<div class="col-sm-6"><label for="confPass">Confirm New Password:</label></div>
-				<div class="col-sm-6"><input name="confPass" id="confPass" type="password"></div>
-			</div>
-			<div class="row">
-				<p id="invalid-password" style="display:none">Invalid Password(s). Please try again.</p>
-			</div>
-			<div class="row">
-				<div class="col-sm-6"><p id="change-password-loading" style="display:none">Loading...</p></div>
-				<div class="col-sm-6"><button class="btn btn-default" id="saveNewPassword"
-					onclick="updatePassword()">Update Password</button></div>
+				<div class="col-sm-6"><span id="change-password-loading" style="display:none">Loading...</span></div>
+				<button class="btn btn-default col-xs-3" id="saveNewPassword"
+					onclick="updatePassword()">Update Password</button>
 			</div>
 		</div>
 	</div>
@@ -363,7 +378,7 @@
 	function fillEmployeePending(){
 		let table = document.getElementById("emp-pending-table");
 		for (i = 0; i < pendingRequests.length; i++){
-			table.innerHTML += "<tr class='row'><td class='col-xs-2'>"+pendingRequests[i].dateCreated+
+			table.innerHTML += "<tr class='row'><td class='col-xs-2'>"+pendingRequests[i].strDateCreated+
 			"</td><td class='col-xs-2'>"+formatAmount(pendingRequests[i].amount)+
 			"</td><td class='col-xs-8'>"+pendingRequests[i].reason+"</td></tr>";
 		};
@@ -374,7 +389,10 @@
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				pendingRequests = JSON.parse(this.getResponseHeader("pending"));
-				fillEmployeePending();
+				if (pendingRequests != null) {fillEmployeePending();
+				} else {
+					addBlankRow("emp-pending-table");
+				};
 				hide("main");
 				hide("main-loading");
 				show("emp-view-pending");
@@ -407,15 +425,15 @@
 		<div class="col-sm-3"><span id="evr-loading" style="display:none">Loading...</span></div>	
 	</div>
 	<div class="row">
-		<div class="col-xs-10">
+		<div class="col-xs-12">
 			<table class="table table-hover">
 				<thead>
 					<tr class="row">
-						<th class="col-xs-1">Created On</th>
-						<th class="col-xs-1">Amount</th>
-						<th class="col-xs-8">Reason</th>
+						<th class="col-xs-2">Created On</th>
+						<th class="col-xs-2">Amount</th>
+						<th class="col-xs-5">Reason</th>
 						<th class="col-xs-1">Status</th>
-						<th class="col-xs-1">Resolved By</th>
+						<th class="col-xs-2">Resolved By</th>
 					</tr>
 				</thead>
 				<tbody id="emp-resolved-table"></tbody>
@@ -428,11 +446,11 @@
 	function fillEmployeeResolved(){
 		let table = document.getElementById("emp-resolved-table");
 		for (i = 0; i < resolvedRequests.length; i++){
-			table.innerHTML += "<tr class='row'><td class='col-xs-1'>"+resolvedRequests[i].dateCreated+
-			"</td><td class='col-xs-1'>"+formatAmount(resolvedRequests[i].amount)+
-			"</td><td class='col-xs-8'>"+resolvedRequests[i].reason+
+			table.innerHTML += "<tr class='row'><td class='col-xs-2'>"+resolvedRequests[i].strDateCreated+
+			"</td><td class='col-xs-2'>"+formatAmount(resolvedRequests[i].amount)+
+			"</td><td class='col-xs-5'>"+resolvedRequests[i].reason+
 			"</td><td class='col-xs-1'>"+resolvedRequests[i].statusStr+
-			"</td><td class='col-xs-1'>"+resolvedRequests[i].manager.fullName+"</td></tr>";
+			"</td><td class='col-xs-2'>"+resolvedRequests[i].manager.fullName+"</td></tr>";
 		};
 	};
 
@@ -441,10 +459,14 @@
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				resolvedRequests = JSON.parse(this.getResponseHeader("resolved"));
-				fillEmployeeResolved();
+				if (resolvedRequests == null) {
+					addBlankRow("emp-resolved-table");
+				} else {
+					fillEmployeeResolved();
+				};
 				hide("main");
 				hide("main-loading");
-				show("emp-view-pending");
+				show("emp-view-resolved");
 			};
 		};
 		xhttp.open("post", "/ProjectOne/employeeViewResolved.do", true);
@@ -501,7 +523,7 @@
 			let button = "<button class='btn btn-default btn-xs' onclick='approveDenyRequest("+
 			pendingRequests[i].id+","+i+")'>Submit</button>";
 			table.innerHTML += "<tr class='row' id=pend-row-"+pendingRequests[i].id+"><td class='col-xs-1'>"+
-			pendingRequests[i].dateCreated+"</td><td class='col-xs-1'>"+
+			pendingRequests[i].strDateCreated+"</td><td class='col-xs-1'>"+
 			pendingRequests[i].employee.fullName+"</td><td class='col-xs-1'>"+
 			formatAmount(pendingRequests[i].amount)+"</td><td class='col-xs-6'>"+
 			pendingRequests[i].reason+"</td><td id='dropdown-"+pendingRequests[i].id+"' class='col-xs-3'>"+
@@ -514,7 +536,11 @@
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				pendingRequests = JSON.parse(this.getResponseHeader("pending"));
-				fillManagerPending();
+				if (pendingRequests != null) {
+					fillManagerPending();
+				} else {
+					addBlankRow("mgr-pending-table");
+				};
 				hide("main");
 				hide("main-loading");
 				show("mgr-view-pending");
@@ -587,7 +613,7 @@
 	function fillManagerResolved(){
 		let table = document.getElementById("mgr-resolved-table");
 		for (i = 0; i < resolvedRequests.length; i++){
-			table.innerHTML += "<tr class='row'><td class='col-xs-1'>"+resolvedRequests[i].dateCreated+
+			table.innerHTML += "<tr class='row'><td class='col-xs-1'>"+resolvedRequests[i].strDateCreated+
 			"</td><td class='col-xs-1'>"+resolvedRequests[i].employee.fullName+
 			"</td><td class='col-xs-1'>"+formatAmount(resolvedRequests[i].amount)+
 			"</td><td class='col-xs-7'>"+resolvedRequests[i].reason+
@@ -601,7 +627,11 @@
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				resolvedRequests = JSON.parse(this.getResponseHeader("resolved"));
-				fillManagerResolved();
+				if (resolvedRequests != null) {
+					fillManagerResolved();
+				} else {
+					addBlankRow("mgr-resolved-table");
+				};
 				hide("main");
 				hide("main-loading");
 				show("mgr-view-pending");
@@ -625,7 +655,7 @@
 
 <!-- NEW REQUEST -->
 
-<div id="new-request" style="display:none" class="logged-in">
+<div id="create-new-request" style="display:none" class="logged-in">
 	<div class="row">
 		<h1>New Reimbursement Request:</h1>
 	</div>
@@ -634,18 +664,18 @@
 		<div class="col-sm-3"><span id="new-req-loading" style="display:none">Loading...</span></div>
 	</div>
 	<div class="row">
-		<div class="col-sm-6">
-			<div class="row">
-				<div class="col-sm-6"><label for="amount">Amount:</label></div>
-				<div class="col-sm-6"><input name="amount" id="amount" type="text" class="newReq"></div>
+		<div class="col-sm-10 form-horizontal">
+			<div class="form-group">
+				<label for="amount" class=" col-sm-3 control-label">Amount ($):</label>
+				<div class="col-sm-6"><input name="amount" class="form-control newReq" id="amount" type="text"></div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="reason">Reason:</label>
+				<div class="col-sm-6"><textarea name="reason" id="reason" class="form-control newReq"></textarea></div>
 			</div>
 			<div class="row">
-				<div class="col-sm-6"><label for="reason">Reason:</label></div>
-				<div class="col-sm-6"><textarea name="reason" id="reason" class="newReq"></textarea></div>
-			</div>
-			<div class="row">
-				<div class="col-sm-6"></div>
-				<div class="col-sm-6"><button class="btn btn-default" id="createRequest"
+				<div class="col-sm-3"><span id="new-req-loading" style="display:none">Loading...</span></div>
+				<div class="col-sm-6"><button class="btn btn-default col-xs-6 " id="createRequest"
 					onclick="createRequest()">Create</button></div>
 			</div>
 		</div>
@@ -662,7 +692,7 @@
 
 	function backFromNewReq(){
 		show("new-req-loading");
-		hide("new-request");
+		hide("create-new-request");
 		wipeNewReqFields();
 		show("main");
 		hide("new-req-loading");
@@ -675,7 +705,7 @@
 		let xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				hide("new-request");
+				hide("create-new-request");
 				wipeNewReqFields();
 				show("new-request-success");
 				show("main");
@@ -741,7 +771,11 @@
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				allEmployees = JSON.parse(this.getResponseHeader("employees"));
-				fillAllEmployees();
+				if (allEmployees != null) {
+					fillAllEmployees();
+				} else {
+					addBlankRow("all-emps-table");
+				};
 				hide("main");
 				show("all-employees");
 				hide("main-loading");
@@ -880,7 +914,7 @@
 			let button = "<button class='btn btn-default btn-xs' onclick='approveDenyEmpReq("+
 			empPending[i].id+","+i+")'>Submit</button>";
 			table.innerHTML += "<tr class='row' id=emp-pend-row-"+empPending[i].id+"><td class='col-xs-2'>"+
-			empPending[i].dateCreated+"</td><td class='col-xs-2'>"+
+			empPending[i].strDateCreated+"</td><td class='col-xs-2'>"+
 			formatAmount(empPending[i].amount)+"</td><td class='col-xs-5'>"+
 			empPending[i].reason+"</td><td id='dropdown-"+empPending[i].id+"' class='col-xs-3'>"+
 			dropdown+button+"</td></tr>";
@@ -889,7 +923,11 @@
 
 	function mgrViewEmpPending(){
 		show("view-emp-loading");
-		fillMgrEmpPending();
+		if (empPending != null) {
+			fillMgrEmpPending();
+		} else {
+			addBlankRow("mgr-emp-pending-table");
+		};
 		hide("mgr-emp-resolved-table");
 		wipeTable("mgr-emp-resolved-table");
 		show("mgr-emp-pending-table");
@@ -909,7 +947,11 @@
 
 	function mgrViewEmpResolved(){
 		show("view-emp-loading");
-		fillMgrEmpResolved();
+		if (empResolved != null) {
+			fillMgrEmpResolved();
+		} else {
+			addBlankRow("mgr-emp-resolved-table");
+		};
 		hide("mgr-emp-pending-table");
 		wipeTable("mgr-emp-pending-table");
 		show("mgr-emp-resolved-table");
