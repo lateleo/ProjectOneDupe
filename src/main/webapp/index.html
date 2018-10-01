@@ -389,7 +389,8 @@
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				pendingRequests = JSON.parse(this.getResponseHeader("pending"));
-				if (pendingRequests != null) {fillEmployeePending();
+				if (pendingRequests != null && pendingRequests.length != 0) {
+					fillEmployeePending();
 				} else {
 					addBlankRow("emp-pending-table");
 				};
@@ -459,10 +460,10 @@
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				resolvedRequests = JSON.parse(this.getResponseHeader("resolved"));
-				if (resolvedRequests == null) {
-					addBlankRow("emp-resolved-table");
-				} else {
+				if (resolvedRequests != null && resolvedRequests.length != 0) {
 					fillEmployeeResolved();
+				} else {
+					addBlankRow("emp-resolved-table");
 				};
 				hide("main");
 				hide("main-loading");
@@ -536,7 +537,7 @@
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				pendingRequests = JSON.parse(this.getResponseHeader("pending"));
-				if (pendingRequests != null) {
+				if (pendingRequests != null && pendingRequests.length != 0) {
 					fillManagerPending();
 				} else {
 					addBlankRow("mgr-pending-table");
@@ -627,11 +628,9 @@
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				resolvedRequests = JSON.parse(this.getResponseHeader("resolved"));
-				if (resolvedRequests != null) {
-					console.log("test");
+				if (resolvedRequests != null && resolvedRequests.length != 0) {
 					fillManagerResolved();
 				} else {
-					console.log("test 2");
 					addBlankRow("mgr-resolved-table");
 				};
 				hide("main");
@@ -924,7 +923,7 @@
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				empPending = JSON.parse(this.getResponseHeader("pending"));
-				if (empPending != null){
+				if (empPending != null && empPending.length != 0){
 					fillMgrEmpPending();
 				} else {
 					addBlankRow("mgr-emp-pending-table");
@@ -960,7 +959,7 @@
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				empResolved = JSON.parse(this.getResponseHeader("resolved"));
-				if (empResolved != null){
+				if (empResolved != null && empResolved.length != 0){
 					fillMgrEmpResolved();
 				} else {
 					addBlankRow("mgr-emp-resolved-table");

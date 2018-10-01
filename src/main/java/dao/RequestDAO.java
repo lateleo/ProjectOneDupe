@@ -72,7 +72,7 @@ public class RequestDAO implements IRequest {
 	
 	public List<Request> resolvedRequests(int employeeId) {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM requests WHERE employee_id = ? and status = 1 or status = 2 ORDER BY date_created";
+		String sql = "SELECT * FROM requests WHERE employee_id = ? and (status = 1 or status = 2) ORDER BY date_created";
 		List<Manager> managers = ManagerService.allManagers();
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
