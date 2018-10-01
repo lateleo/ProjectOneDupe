@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import models.Employee;
 import models.Request;
 import models.User;
+import service.EmployeeService;
 import service.RequestService;
 import service.UserService;
 import util.JSONConverter;
@@ -38,6 +40,8 @@ public class ServletHelper {
 			updateRequest(request, response);
 		} else if (uri.equals("/ProjectOne/createRequest.do")) {
 			createRequest(request, response);
+		} else if (uri.equals("/ProjectOne/allEmployees.do")) {
+			allEmployees(request, response);
 		}
 	}
 	
@@ -77,12 +81,12 @@ public class ServletHelper {
 	}
 	
 	public static void employeeViewPending(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-		List<Request> pending = RequestService.pendingRequests(Integer.valueOf(request.getParameter("userId")));
+		List<Request> pending = RequestService.pendingRequests(Integer.valueOf(request.getParameter("employeeId")));
 		response.setHeader("pending", JSONConverter.convert(pending));
 	}
 	
 	public static void employeeViewResolved(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-		List<Request> resolved = RequestService.resolvedRequests(Integer.valueOf(request.getParameter("userId")));
+		List<Request> resolved = RequestService.resolvedRequests(Integer.valueOf(request.getParameter("employeeId")));
 		response.setHeader("resolved", JSONConverter.convert(resolved));
 	}
 	
@@ -96,15 +100,25 @@ public class ServletHelper {
 		response.setHeader("resolved", JSONConverter.convert(resolved));
 	}
 	
-	public static void updateRequest(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-		Request req = RequestService.getRequest(request.getIntHeader("id"));
-		req.setStatus(request.getIntHeader("status"));
+	public static void updateRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Request req = RequestService.getRequest(Integer.valueOf(request.getParameter("id")));
+		req.setStatus(Integer.valueOf(request.getParameter("newStatus")));
+		req.setManagerId(Integer.valueOf(request.getParameter("managerId")));
 		RequestService.updateRequest(req);
 	}
 	
 	public static void createRequest(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-		
+		Request newReq = new Request(Integer.valueOf(request.getParameter("empId")),
+				Double.valueOf(request.getParameter("amount")),request.getParameter("reason"));
+		RequestService.createRequest(newReq);
 	}
+	
+	public static void allEmployees(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		List<Employee> employees = EmployeeService.allEmployees();
+		response.setHeader("employees", JSONConverter.convert(employees));
+	}
+	
+
 
 }
 

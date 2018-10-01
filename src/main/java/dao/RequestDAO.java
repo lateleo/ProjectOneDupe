@@ -45,12 +45,12 @@ public class RequestDAO implements IRequest {
 	
 
 
-	public List<Request> pendingRequests(int employee_id) {
+	public List<Request> pendingRequests(int employeeId) {
 		Connection conn = JDBCconnection.getConnection();
 		String sql = "SELECT * FROM requests WHERE employee_id = ? and status = 0 ORDER BY date_created";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, employee_id);
+			ps.setInt(1, employeeId);
 			ArrayList<Request> requests = new ArrayList<Request>();
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -70,13 +70,13 @@ public class RequestDAO implements IRequest {
 		}
 	}
 	
-	public List<Request> resolvedRequests(int employee_id) {
+	public List<Request> resolvedRequests(int employeeId) {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM requests WHERE employee_id = ? and status = 1 or 2 ORDER BY date_created";
+		String sql = "SELECT * FROM requests WHERE employee_id = ? and status = 1 or status = 2 ORDER BY date_created";
 		List<Manager> managers = ManagerService.allManagers();
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, employee_id);
+			ps.setInt(1, employeeId);
 			ArrayList<Request> requests = new ArrayList<Request>();
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -127,7 +127,7 @@ public class RequestDAO implements IRequest {
 	
 	public List<Request> resolvedRequests() {
 		Connection conn = JDBCconnection.getConnection();
-		String sql = "SELECT * FROM requests WHERE status = 1 or 2 ORDER BY date_created";
+		String sql = "SELECT * FROM requests WHERE status = 1 or status = 2 ORDER BY date_created";
 		List<Manager> managers = ManagerService.allManagers();
 		List<Employee> employees = EmployeeService.allEmployees();
 		try {

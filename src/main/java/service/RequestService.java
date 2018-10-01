@@ -15,16 +15,16 @@ public class RequestService {
 		return new RequestDAO().pendingRequests();
 	}
 	
-	public static List<Request> pendingRequests(int employee_id){
-		return new RequestDAO().pendingRequests(employee_id);
+	public static List<Request> pendingRequests(int employeeId){
+		return new RequestDAO().pendingRequests(employeeId);
 	}
 	
 	public static List<Request> resolvedRequests(){
 		return new RequestDAO().resolvedRequests();
 	}
 	
-	public static List<Request> resolvedRequests(int employee_id){
-		return new RequestDAO().resolvedRequests(employee_id);
+	public static List<Request> resolvedRequests(int employeeId){
+		return new RequestDAO().resolvedRequests(employeeId);
 	}
 	
 	
